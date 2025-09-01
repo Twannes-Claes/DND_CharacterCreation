@@ -1,40 +1,88 @@
-using System.Collections;
 using UnityEngine;
-
-using UnityEngine.Networking;
+using System.Collections.Generic;
+using Newtonsoft.Json.Linq; // Make sure you have Newtonsoft.Json installed
 
 public class Gamemanager : MonoBehaviour
 {
     [SerializeField]
-    private ApiCategory categoryToFetch;
+    //private ApiCategory categoryToFetch;
 
+    public TextAsset jsonFile; // Drag your .txt JSON file here in the Inspector
     private void Start()
     {
-        StartCoroutine(FetchCategory(categoryToFetch));
-    }
-    private IEnumerator FetchCategory(ApiCategory category)
-    {
-        string url = ApiHelper.GetURL(category);
-
-        using (UnityWebRequest request = UnityWebRequest.Get(url))
+        StartCoroutine(ApiHelper.FetchCategory(ApiCategory.Equipment, (result) =>
         {
-            request.SetRequestHeader("Accept", "application/json");
-            yield return request.SendWebRequest();
-
-            if (request.result != UnityWebRequest.Result.Success)
+            if (result != null && result.results != null)
             {
-                Debug.LogError("Error fetching category: " + request.error);
+                Debug.Log($"Fetched {result.count} items from {result.category}");
+
+                StartCoroutine(FetchAllDetails(result));
             }
-            else
+        }));
+    }
+
+    private System.Collections.IEnumerator FetchAllDetails(ApiResult result)
+    {
+        foreach (var item in result.results)
+        {
+            //Debug.Log($"{item.index} ({item.url})");
+
+            EquipmentDetail detail = null;
+
+            System.Collections.IEnumerator fetchCoroutine = ApiHelper.FetchDetail<EquipmentDetail>(item.url, d => detail = d);
+            yield return fetchCoroutine;
+
+            if (detail != null)
             {
-                string json = request.downloadHandler.text;
-
-                ApiResult result = JsonUtility.FromJson<ApiResult>(json);
-                result.category = category;
-
-                Debug.Log(json);
+                //Debug.Log($"Detail for {detail}");
             }
         }
+
+        Debug.Log("done");
     }
+
+    //private void PrintApiUniqueKeys()
+    //{
+    //    string jsonText = jsonFile.text;
+    //    var keys = new HashSet<string>();
+    //
+    //    // Check if JSON starts with [ or {
+    //    jsonText = jsonText.Trim();
+    //    if (jsonText.StartsWith("["))
+    //    {
+    //        JArray array = JArray.Parse(jsonText);
+    //        foreach (var item in array)
+    //            ExtractKeys(item, keys);
+    //    }
+    //    else
+    //    {
+    //        JObject obj = JObject.Parse(jsonText);
+    //        ExtractKeys(obj, keys);
+    //    }
+    //
+    //    // Join all keys into a single string
+    //    string allKeys = string.Join(", ", keys);
+    //    Debug.Log("Unique keys: " + allKeys);
+    //}
+    //
+    //private void ExtractKeys(JToken token, HashSet<string> keys, string prefix = "")
+    //{
+    //    if (token is JObject jObject)
+    //    {
+    //        foreach (var prop in jObject.Properties())
+    //        {
+    //            string keyName = string.IsNullOrEmpty(prefix) ? prop.Name : $"{prefix}.{prop.Name}";
+    //            keys.Add(keyName);
+    //            ExtractKeys(prop.Value, keys, keyName);
+    //        }
+    //    }
+    //    else if (token is JArray jArray)
+    //    {
+    //        foreach (var item in jArray)
+    //        {
+    //            ExtractKeys(item, keys, prefix);
+    //        }
+    //    }
+    //}
 }
 

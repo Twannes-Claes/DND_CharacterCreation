@@ -152,6 +152,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 173c8d64ab95d3b488dba01c9148fd27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  categoryToFetch: 6
+  jsonFile: {fileID: 4900000, guid: 63d996c05f1fdb54890bc4d3b532ba02, type: 3}
 --- !u!4 &152808120
 Transform:
   m_ObjectHideFlags: 0
