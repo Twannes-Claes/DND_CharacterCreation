@@ -10,7 +10,7 @@ public class Gamemanager : MonoBehaviour
     public TextAsset jsonFile; // Drag your .txt JSON file here in the Inspector
     private void Start()
     {
-        StartCoroutine(ApiHelper.FetchCategory(ApiCategory.Equipment, (result) =>
+        StartCoroutine(ApiHelper.FetchCategory(ApiCategory.Spells, (result) =>
         {
             if (result != null && result.results != null)
             {
@@ -27,9 +27,9 @@ public class Gamemanager : MonoBehaviour
         {
             //Debug.Log($"{item.index} ({item.url})");
 
-            EquipmentDetail detail = null;
+            EquipmentReference detail = null;
 
-            System.Collections.IEnumerator fetchCoroutine = ApiHelper.FetchDetail<EquipmentDetail>(item.url, d => detail = d);
+            System.Collections.IEnumerator fetchCoroutine = ApiHelper.FetchDetail<EquipmentReference>(item.url, d => detail = d);
             yield return fetchCoroutine;
 
             if (detail != null)

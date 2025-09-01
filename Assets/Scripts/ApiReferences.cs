@@ -17,17 +17,9 @@ public class ApiReference
     public string url;
 }
 
-[Serializable]
-public class CommonDetail
-{
-    public string index;
-    public string name;
-    public string url;
-}
-
 
 [Serializable]
-public class EquipmentDetail
+public class EquipmentReference
 {
     public override string ToString()
     {
@@ -37,57 +29,57 @@ public class EquipmentDetail
     public string index;
     public string name;
 
-    public CommonDetail equipment_category;
+    public ApiReference equipment_category;
 
     public string weapon_category;
     public string weapon_range;
     public string category_range;
 
-    public CostDetail cost;
-    public DamageDetail damage;
-    public RangeDetail range;
+    public CostReference cost;
+    public DamageReference damage;
+    public RangeReference range;
 
-    public DamageDetail two_handed_damage;
+    public DamageReference two_handed_damage;
 
     public double weight;
-    public CommonDetail[] properties;
+    public ApiReference[] properties;
     public string url;
 
-    public ThrowRangeDetail throw_range;
+    public ThrowRangeReference throw_range;
 
     public string[] special;
     public string image;
 
     public string armor_category;
 
-    public ArmorClass armor_class;
+    public ArmorClassReference armor_class;
 
     public int str_minimum;
     public bool stealth_disadvantage;
 
-    public CommonDetail gear_category;
+    public ApiReference gear_category;
 
     public string[] desc;
     public int quantity;
 
-    public ContentDetail[] contents;
+    public ContentReference[] contents;
 
     public string tool_category;
     public string vehicle_category;
 
-    public SpeedDetail speed;
+    public SpeedReference speed;
     public string capacity;
 }
 
 [Serializable]
-public class DamageDetail
+public class DamageReference
 {
     public string damage_dice;
-    public CommonDetail damage_type;
+    public ApiReference damage_type;
 }
 
 [Serializable]
-public class RangeDetail
+public class RangeReference
 {
     [JsonProperty("normal")]
     public int normalRange;
@@ -97,7 +89,7 @@ public class RangeDetail
 }
 
 [Serializable]
-public class ThrowRangeDetail
+public class ThrowRangeReference
 {
     [JsonProperty("normal")]
     public int normalRange;
@@ -107,7 +99,7 @@ public class ThrowRangeDetail
 }
 
 [Serializable]
-public class ArmorClass
+public class ArmorClassReference
 {
     [JsonProperty("base")]
     public int base_armor;
@@ -116,22 +108,22 @@ public class ArmorClass
 }
 
 [Serializable]
-public class ContentDetail
+public class ContentReference
 {
     public int quantity;
 
-    public CommonDetail item;
+    public ApiReference item;
 }
 
 [Serializable]
-public class SpeedDetail
+public class SpeedReference
 {
     public double quantity;
     public string unit;
 }
 
 [Serializable]
-public class CostDetail
+public class CostReference
 {
     public int quantity;
     public string unit;
