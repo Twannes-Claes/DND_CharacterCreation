@@ -1,88 +1,56 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Newtonsoft.Json.Linq; // Make sure you have Newtonsoft.Json installed
+using System.Threading.Tasks;
+
 
 public class Gamemanager : MonoBehaviour
 {
+    #region Editor Fields
     [SerializeField]
-    //private ApiCategory categoryToFetch;
+    private ApiCategoryType _categoryToFetch;
+    #endregion
 
-    public TextAsset jsonFile; // Drag your .txt JSON file here in the Inspector
-    private void Start()
+    #region Fields
+    private Dictionary<ApiCategoryType, ApiCategoryResource> _cachedCategories = new Dictionary<ApiCategoryType, ApiCategoryResource>();
+    #endregion
+
+    #region Statics
+    public static Gamemanager Instance { get; private set; }
+    #endregion
+    //public TextAsset jsonFile;
+
+    #region Lifetime Cycle
+    private void Awake()
     {
-        StartCoroutine(ApiHelper.FetchCategory(ApiCategory.Spells, (result) =>
+        if (Instance == null)
         {
-            if (result != null && result.results != null)
-            {
-                Debug.Log($"Fetched {result.count} items from {result.category}");
-
-                StartCoroutine(FetchAllDetails(result));
-            }
-        }));
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
-    private System.Collections.IEnumerator FetchAllDetails(ApiResult result)
+    #endregion
+
+    #region Functions
+    public async Task<ApiCategoryResource> FetchCategory(ApiCategoryType category)
     {
-        foreach (var item in result.results)
+        if (_cachedCategories.TryGetValue(category, out var resource))
         {
-            //Debug.Log($"{item.index} ({item.url})");
-
-            EquipmentReference detail = null;
-
-            System.Collections.IEnumerator fetchCoroutine = ApiHelper.FetchDetail<EquipmentReference>(item.url, d => detail = d);
-            yield return fetchCoroutine;
-
-            if (detail != null)
-            {
-                //Debug.Log($"Detail for {detail}");
-            }
+            return resource;
         }
 
-        Debug.Log("done");
-    }
+        ApiCategoryResource result = await ApiHelper.FetchCategoryAsync(category); ;
+        if (result != null)
+        {
+            _cachedCategories[category] = result;
+        }
 
-    //private void PrintApiUniqueKeys()
-    //{
-    //    string jsonText = jsonFile.text;
-    //    var keys = new HashSet<string>();
-    //
-    //    // Check if JSON starts with [ or {
-    //    jsonText = jsonText.Trim();
-    //    if (jsonText.StartsWith("["))
-    //    {
-    //        JArray array = JArray.Parse(jsonText);
-    //        foreach (var item in array)
-    //            ExtractKeys(item, keys);
-    //    }
-    //    else
-    //    {
-    //        JObject obj = JObject.Parse(jsonText);
-    //        ExtractKeys(obj, keys);
-    //    }
-    //
-    //    // Join all keys into a single string
-    //    string allKeys = string.Join(", ", keys);
-    //    Debug.Log("Unique keys: " + allKeys);
-    //}
-    //
-    //private void ExtractKeys(JToken token, HashSet<string> keys, string prefix = "")
-    //{
-    //    if (token is JObject jObject)
-    //    {
-    //        foreach (var prop in jObject.Properties())
-    //        {
-    //            string keyName = string.IsNullOrEmpty(prefix) ? prop.Name : $"{prefix}.{prop.Name}";
-    //            keys.Add(keyName);
-    //            ExtractKeys(prop.Value, keys, keyName);
-    //        }
-    //    }
-    //    else if (token is JArray jArray)
-    //    {
-    //        foreach (var item in jArray)
-    //        {
-    //            ExtractKeys(item, keys, prefix);
-    //        }
-    //    }
-    //}
+        return result;
+    }
+    #endregion  
 }
 

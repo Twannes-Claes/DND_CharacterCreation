@@ -2,24 +2,24 @@ using System;
 using Newtonsoft.Json;
 
 [Serializable]
-public class ApiResult
+public class ApiCategoryResource
 {
-    public ApiCategory category;
+    public ApiCategoryType category;
     public int count;
-    public ApiReference[] results;
+    public ApiResource[] results;
 }
 
 [Serializable]
-public class ApiReference
+public class ApiResource
 {
     public string index;
     public string name;
     public string url;
 }
 
-
+#region EquipmentResources
 [Serializable]
-public class EquipmentReference
+public class EquipmentResource
 {
     public override string ToString()
     {
@@ -29,57 +29,59 @@ public class EquipmentReference
     public string index;
     public string name;
 
-    public ApiReference equipment_category;
+    public ApiResource equipment_category;
 
     public string weapon_category;
     public string weapon_range;
     public string category_range;
 
-    public CostReference cost;
-    public DamageReference damage;
-    public RangeReference range;
+    public CostResource cost;
+    public DamageResource damage;
 
-    public DamageReference two_handed_damage;
+    [JsonProperty("range")]
+    public RangeResource range;
+
+    public DamageResource two_handed_damage;
 
     public double weight;
-    public ApiReference[] properties;
+    public ApiResource[] properties;
     public string url;
 
-    public ThrowRangeReference throw_range;
+    public ThrowRangeResource throw_range;
 
     public string[] special;
     public string image;
 
     public string armor_category;
 
-    public ArmorClassReference armor_class;
+    public ArmorClassResource armor_class;
 
     public int str_minimum;
     public bool stealth_disadvantage;
 
-    public ApiReference gear_category;
+    public ApiResource gear_category;
 
     public string[] desc;
     public int quantity;
 
-    public ContentReference[] contents;
+    public ContentResource[] contents;
 
     public string tool_category;
     public string vehicle_category;
 
-    public SpeedReference speed;
+    public SpeedResource speed;
     public string capacity;
 }
 
 [Serializable]
-public class DamageReference
+public class DamageResource
 {
     public string damage_dice;
-    public ApiReference damage_type;
+    public ApiResource damage_type;
 }
 
 [Serializable]
-public class RangeReference
+public class RangeResource
 {
     [JsonProperty("normal")]
     public int normalRange;
@@ -89,7 +91,7 @@ public class RangeReference
 }
 
 [Serializable]
-public class ThrowRangeReference
+public class ThrowRangeResource
 {
     [JsonProperty("normal")]
     public int normalRange;
@@ -99,7 +101,7 @@ public class ThrowRangeReference
 }
 
 [Serializable]
-public class ArmorClassReference
+public class ArmorClassResource
 {
     [JsonProperty("base")]
     public int base_armor;
@@ -108,23 +110,24 @@ public class ArmorClassReference
 }
 
 [Serializable]
-public class ContentReference
+public class ContentResource
 {
     public int quantity;
 
-    public ApiReference item;
+    public ApiResource item;
 }
 
 [Serializable]
-public class SpeedReference
+public class SpeedResource
 {
     public double quantity;
     public string unit;
 }
 
 [Serializable]
-public class CostReference
+public class CostResource
 {
     public int quantity;
     public string unit;
 }
+#endregion

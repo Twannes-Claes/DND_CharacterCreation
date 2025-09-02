@@ -1,11 +1,11 @@
-using System;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
+using System;
 
-public enum ApiCategory
+public enum ApiCategoryType
 {
     AbilityScores,
     Alignments,
@@ -33,11 +33,63 @@ public enum ApiCategory
     WeaponProperties
 }
 
+public enum ApiCategoryTypeUsable
+{
+    Equipment,
+    Spells
+}
+
 public static class ApiHelper
 {
-    private static readonly string baseUrl = "https://www.dnd5eapi.co";
-    private static readonly string apiUrl = "/api/2014/";
-    public static string CategoryToUrl(ApiCategory category)
+    private static readonly string baseURL = "https://www.dnd5eapi.co";
+    private static readonly string apiURL = "/api/2014/";
+
+    public static async Task<T> FetchDetailAsync<T>(string url)
+    {
+        string apiUrl = baseURL + url;
+        string json = await FetchJsonAsync(apiUrl);
+
+        return JsonConvert.DeserializeObject<T>(json);
+    }
+
+    public static async Task<ApiCategoryResource> FetchCategoryAsync(ApiCategoryType category)
+    {
+        string url = CategoryToUrl(category);
+        string json = await FetchJsonAsync(url);
+    
+        ApiCategoryResource result = JsonConvert.DeserializeObject<ApiCategoryResource>(json);
+        result.category = category;
+
+        return result;
+    }
+
+    private static Task<string> FetchJsonAsync(string url)
+    {
+        TaskCompletionSource<string> tcs = new TaskCompletionSource<string>();
+
+        UnityWebRequest request = UnityWebRequest.Get(url);
+        request.SetRequestHeader("Accept", "application/json");
+
+        var operation = request.SendWebRequest();
+
+        operation.completed += _ =>
+        {
+            if (request.result != UnityWebRequest.Result.Success)
+            {
+                tcs.SetException(new Exception("Error fetching category: " + request.error));
+            }
+            else
+            {
+                tcs.SetResult(request.downloadHandler.text);
+            }
+
+            request.Dispose();
+        };
+
+        return tcs.Task;
+    }
+
+    private static string CategoryToUrl(ApiCategoryType category)
     {
         string enumName = category.ToString();
 
@@ -45,53 +97,52 @@ public static class ApiHelper
         //AbilityScores -> ability-scores
         string path = Regex.Replace(enumName, "(?<!^)([A-Z])", "-$1").ToLower();
 
-        return baseUrl + apiUrl + path;
+        return baseURL + apiURL + path;
     }
 
-    public static System.Collections.IEnumerator FetchDetail<T>(string url, Action<T> callback)
-    {
-        string apiUrl = baseUrl + url;
-
-        using (UnityWebRequest request = UnityWebRequest.Get(apiUrl))
-        {
-            request.SetRequestHeader("Accept", "application/json");
-            yield return request.SendWebRequest();
-
-            if (request.result != UnityWebRequest.Result.Success)
-            {
-                Debug.LogError("Error fetching category: " + request.error);
-            }
-            else
-            {
-                string json = request.downloadHandler.text;
-                T detail = JsonConvert.DeserializeObject<T>(json);
-                callback?.Invoke(detail);
-            }
-        }
-    }
-
-    public static IEnumerator FetchCategory(ApiCategory category, Action<ApiResult> callback)
-    {
-        string url = CategoryToUrl(category);
-
-        using (UnityWebRequest request = UnityWebRequest.Get(url))
-        {
-            request.SetRequestHeader("Accept", "application/json");
-            yield return request.SendWebRequest();
-
-            if (request.result != UnityWebRequest.Result.Success)
-            {
-                Debug.LogError("Error fetching category: " + request.error);
-            }
-            else
-            {
-                string json = request.downloadHandler.text;
-
-                ApiResult result = JsonConvert.DeserializeObject<ApiResult>(json);
-                result.category = category;
-
-                callback?.Invoke(result);
-            }
-        }
-    }
+    #region PrintUniqueAPI_Keys
+    //private void PrintApiUniqueKeys()
+    //{
+    //    string jsonText = jsonFile.text;
+    //    var keys = new HashSet<string>();
+    //
+    //    // Check if JSON starts with [ or {
+    //    jsonText = jsonText.Trim();
+    //    if (jsonText.StartsWith("["))
+    //    {
+    //        JArray array = JArray.Parse(jsonText);
+    //        foreach (var item in array)
+    //            ExtractKeys(item, keys);
+    //    }
+    //    else
+    //    {
+    //        JObject obj = JObject.Parse(jsonText);
+    //        ExtractKeys(obj, keys);
+    //    }
+    //
+    //    // Join all keys into a single string
+    //    string allKeys = string.Join(", ", keys);
+    //    Debug.Log("Unique keys: " + allKeys);
+    //}
+    //
+    //private void ExtractKeys(JToken token, HashSet<string> keys, string prefix = "")
+    //{
+    //    if (token is JObject jObject)
+    //    {
+    //        foreach (var prop in jObject.Properties())
+    //        {
+    //            string keyName = string.IsNullOrEmpty(prefix) ? prop.Name : $"{prefix}.{prop.Name}";
+    //            keys.Add(keyName);
+    //            ExtractKeys(prop.Value, keys, keyName);
+    //        }
+    //    }
+    //    else if (token is JArray jArray)
+    //    {
+    //        foreach (var item in jArray)
+    //        {
+    //            ExtractKeys(item, keys, prefix);
+    //        }
+    //    }
+    //}
+    #endregion
 }
