@@ -15,6 +15,9 @@ public class ItemListManager : MonoBehaviour
 
     [SerializeField]
     private GameObject _categoryPanel;
+
+    [SerializeField]
+    private GameObject _loadIcon;
     #endregion
 
     #region LifeCycle
@@ -37,8 +40,13 @@ public class ItemListManager : MonoBehaviour
             Destroy(child.gameObject);
         }
 
+        _loadIcon.SetActive(true);
+
         ApiCategoryResource categoryResource = await Gamemanager.Instance.FetchCategory(category);
         if (categoryResource == null) return;
+
+        _loadIcon.SetActive(false);
+        _loadIcon.transform.rotation = Quaternion.identity;
 
         foreach (ApiResource item in categoryResource.results)
         {
