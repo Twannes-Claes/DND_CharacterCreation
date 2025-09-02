@@ -1,5 +1,5 @@
-using System;
 using Newtonsoft.Json;
+using System;
 
 [Serializable]
 public class ApiCategoryResource

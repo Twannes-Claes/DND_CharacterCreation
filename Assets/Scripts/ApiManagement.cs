@@ -1,8 +1,7 @@
-using UnityEngine;
-using UnityEngine.Networking;
 using System.Text.RegularExpressions;
-using Newtonsoft.Json;
+using UnityEngine.Networking;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using System;
 
 public enum ApiCategoryType
@@ -33,17 +32,14 @@ public enum ApiCategoryType
     WeaponProperties
 }
 
-public enum ApiCategoryTypeUsable
-{
-    Equipment,
-    Spells
-}
-
 public static class ApiHelper
 {
+    #region Static Fields
     private static readonly string baseURL = "https://www.dnd5eapi.co";
     private static readonly string apiURL = "/api/2014/";
+    #endregion
 
+    #region Functions
     public static async Task<T> FetchDetailAsync<T>(string url)
     {
         string apiUrl = baseURL + url;
@@ -99,6 +95,7 @@ public static class ApiHelper
 
         return baseURL + apiURL + path;
     }
+    #endregion
 
     #region PrintUniqueAPI_Keys
     //private void PrintApiUniqueKeys()

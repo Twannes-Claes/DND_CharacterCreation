@@ -1,7 +1,6 @@
-using System;
+using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
 
 public class ItemButton : MonoBehaviour
 {
@@ -17,10 +16,9 @@ public class ItemButton : MonoBehaviour
     private ApiResource _itemResource;
     #endregion
 
-    public void Initialize(ApiResource itemResource)
+    #region LifeCycle
+    public void OnEnable()
     {
-        _itemResource = itemResource;
-        _text.SetText(_itemResource.name);
         _button.onClick.AddListener(OnClicked);
     }
 
@@ -28,9 +26,18 @@ public class ItemButton : MonoBehaviour
     {
         _button.onClick.RemoveAllListeners();
     }
+    #endregion
+
+    #region Functions
+    public void Initialize(ApiResource itemResource)
+    {
+        _itemResource = itemResource;
+        _text.SetText(_itemResource.name);
+    }
 
     private void OnClicked()
     {
         Debug.Log($"Clicked item {_itemResource.index}");
     }
+    #endregion
 }

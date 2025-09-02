@@ -1,8 +1,9 @@
-using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine;
 
 public class ItemListManager : MonoBehaviour
 {
+    #region Editor Fields
     [SerializeField] 
     private Transform _contentParent;
 
@@ -14,7 +15,9 @@ public class ItemListManager : MonoBehaviour
 
     [SerializeField]
     private GameObject _categoryPanel;
+    #endregion
 
+    #region LifeCycle
     private void OnEnable()
     {
         _backButton.onClick.AddListener(OnBackClicked);
@@ -24,7 +27,9 @@ public class ItemListManager : MonoBehaviour
     {
         _backButton.onClick.RemoveListener(OnBackClicked);
     }
+    #endregion
 
+    #region Functions
     public async void LoadCategoryItems(ApiCategoryType category)
     {
         foreach (Transform child in _contentParent)
@@ -54,5 +59,5 @@ public class ItemListManager : MonoBehaviour
 
         _categoryPanel.SetActive(true);
     }
-
+    #endregion
 }

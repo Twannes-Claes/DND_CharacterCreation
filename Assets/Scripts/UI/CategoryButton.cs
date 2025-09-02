@@ -1,7 +1,7 @@
-using System;
-using UnityEngine;
-using TMPro;
 using UnityEngine.UI;
+using UnityEngine;
+using System;
+using TMPro;
 
 public class CategoryButton : MonoBehaviour
 {
@@ -18,16 +18,28 @@ public class CategoryButton : MonoBehaviour
     private Action<ApiCategoryType> _onClicked;
     #endregion
 
+    #region LifeCycle
+    private void OnEnable()
+    {
+        _button.onClick.AddListener(OnClicked);
+    }
+    private void OnDisable()
+    {
+        _button.onClick.RemoveAllListeners();
+    }
+    #endregion
+
+    #region Functions
     public void Initialize(ApiCategoryType category, Action<ApiCategoryType> onClicked)
     {
         _category = category;
         _text.text = _category.ToString();
         _onClicked = onClicked;
-        _button.onClick.AddListener(OnClicked);
     }
 
     private void OnClicked()
     {
         _onClicked?.Invoke(_category);
     }
-}
+    #endregion
+}   

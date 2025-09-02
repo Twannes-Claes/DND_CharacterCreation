@@ -1,15 +1,10 @@
-using UnityEngine;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using UnityEngine;
 
 
 public class Gamemanager : MonoBehaviour
 {
-    #region Editor Fields
-    [SerializeField]
-    private ApiCategoryType _categoryToFetch;
-    #endregion
-
     #region Fields
     private Dictionary<ApiCategoryType, ApiCategoryResource> _cachedCategories = new Dictionary<ApiCategoryType, ApiCategoryResource>();
     #endregion
@@ -17,9 +12,8 @@ public class Gamemanager : MonoBehaviour
     #region Statics
     public static Gamemanager Instance { get; private set; }
     #endregion
-    //public TextAsset jsonFile;
 
-    #region Lifetime Cycle
+    #region LifeCycle
     private void Awake()
     {
         if (Instance == null)
@@ -32,7 +26,6 @@ public class Gamemanager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
     #endregion
 
     #region Functions

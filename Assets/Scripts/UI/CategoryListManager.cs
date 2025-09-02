@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CategoryListManager : MonoBehaviour
@@ -18,11 +16,14 @@ public class CategoryListManager : MonoBehaviour
     private ItemListManager _itemsListManager;
     #endregion
 
+    #region LifeCycle
     private void Awake()
     {
         CreateCategoryButtons();
     }
+    #endregion
 
+    #region Functions
     private void CreateCategoryButtons()
     {
         foreach (ApiCategoryType category in System.Enum.GetValues(typeof(ApiCategoryType)))
@@ -40,4 +41,5 @@ public class CategoryListManager : MonoBehaviour
         _itemsPanel.SetActive(true);
         _itemsListManager.LoadCategoryItems(category);
     }
+    #endregion
 }
