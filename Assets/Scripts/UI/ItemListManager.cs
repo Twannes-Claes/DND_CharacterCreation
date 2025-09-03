@@ -66,6 +66,8 @@ public class ItemListManager : MonoBehaviour
         }
 
         _categoryPanel.SetActive(true);
+
+        Gamemanager.Instance.DetailPanel.SetTitle(string.Empty);
     }
     #endregion
 }

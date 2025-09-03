@@ -37,7 +37,7 @@ public class ItemButton : MonoBehaviour
 
     private void OnClicked()
     {
-        Debug.Log($"Clicked item {_itemResource.index}");
+        Gamemanager.Instance.DetailPanel.SetTitle(_itemResource.name);
     }
     #endregion
 }

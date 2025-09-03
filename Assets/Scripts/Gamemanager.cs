@@ -5,9 +5,18 @@ using UnityEngine;
 
 public class Gamemanager : MonoBehaviour
 {
+    #region Editor Fields
+    [SerializeField]
+    private DetailPanel _detailPanel;
+    #endregion
+
     #region Fields
     private Dictionary<ApiCategoryType, ApiCategoryResource> _cachedCategories = new Dictionary<ApiCategoryType, ApiCategoryResource>();
     #endregion
+
+    #region Properties
+    public DetailPanel DetailPanel => _detailPanel;
+    #endregion 
 
     #region Statics
     public static Gamemanager Instance { get; private set; }

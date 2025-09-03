@@ -95,6 +95,17 @@ public static class ApiHelper
 
         return baseURL + apiURL + path;
     }
+
+    public static string CategoryToString(ApiCategoryType category)
+    {
+        string enumName = category.ToString();
+
+        // Insert space before each capital letter (except the first)
+        // Example: SpellType -> Spell Type
+        string name = Regex.Replace(enumName, "(?<!^)([A-Z])", " $1");
+
+        return name;
+    }
     #endregion
 
     #region PrintUniqueAPI_Keys

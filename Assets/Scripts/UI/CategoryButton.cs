@@ -33,7 +33,7 @@ public class CategoryButton : MonoBehaviour
     public void Initialize(ApiCategoryType category, Action<ApiCategoryType> onClicked)
     {
         _category = category;
-        _text.text = _category.ToString();
+        _text.text = ApiHelper.CategoryToString(category);
         _onClicked = onClicked;
     }
 
