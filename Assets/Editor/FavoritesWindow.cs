@@ -26,6 +26,11 @@ public class QuickAccessWindow : EditorWindow
         SetupReorderableList();
     }
 
+    private void OnDisable()
+    {
+        SaveData();
+    }
+
     private void SetupReorderableList()
     {
         reorderableList = new ReorderableList(items, typeof(QuickItem), true, true, true, true);
@@ -45,14 +50,14 @@ public class QuickAccessWindow : EditorWindow
             float removeWidth = 20;
             float fieldWidth = rect.width - buttonWidth - removeWidth - 10;
 
-            // Open button on the left
             if (GUI.Button(new Rect(rect.x, rect.y, buttonWidth, rect.height), "Open"))
             {
                 if (element.asset != null)
+                {
                     AssetDatabase.OpenAsset(element.asset);
+                }
             }
 
-            // Object field next
             EditorGUI.BeginChangeCheck();
             element.asset = EditorGUI.ObjectField(new Rect(rect.x + buttonWidth + 5, rect.y, fieldWidth, rect.height), element.asset, typeof(UnityEngine.Object), false);
             if (EditorGUI.EndChangeCheck())
@@ -60,7 +65,6 @@ public class QuickAccessWindow : EditorWindow
                 SaveData();
             }
 
-            // Remove button on the right
             if (GUI.Button(new Rect(rect.x + buttonWidth + 5 + fieldWidth + 5, rect.y, removeWidth, rect.height), "X"))
             {
                 items.RemoveAt(index);
@@ -68,13 +72,13 @@ public class QuickAccessWindow : EditorWindow
             }
         };
 
-        reorderableList.onAddCallback = (ReorderableList list) =>
+        reorderableList.onAddCallback = _ =>
         {
             items.Add(new QuickItem());
             SaveData();
         };
 
-        reorderableList.onReorderCallback = (ReorderableList list) =>
+        reorderableList.onReorderCallback = _ =>
         {
             SaveData();
         };
@@ -83,7 +87,9 @@ public class QuickAccessWindow : EditorWindow
     private void OnGUI()
     {
         if (reorderableList != null)
+        {
             reorderableList.DoLayoutList();
+        }
     }
 
     private void SaveData()
@@ -108,4 +114,8 @@ public class QuickAccessWindow : EditorWindow
             items.Add(new QuickItem { asset = asset });
         }
     }
+    //private void CleanupNullAssets()
+    //{
+    //    items.RemoveAll(item => item.asset == null);
+    //}
 }
