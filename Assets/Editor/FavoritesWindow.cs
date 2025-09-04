@@ -1,16 +1,18 @@
 using UnityEngine;
 using UnityEditor;
+using UnityEditorInternal;
 using System.Collections.Generic;
 
 public class QuickAccessWindow : EditorWindow
 {
-    private readonly List<GameObject> prefabList = new();
+    [System.Serializable]
+    private class QuickItem
+    {
+        public UnityEngine.Object asset;
+    }
 
-    private readonly List<SceneAsset> sceneList = new();
-
-    private readonly List<MonoScript> scriptList = new();
-
-    private Vector2 scrollPos;
+    private List<QuickItem> items = new();
+    private ReorderableList reorderableList;
 
     [MenuItem("Twanny/Favorites Window")]
     public static void ShowWindow()
@@ -18,116 +20,92 @@ public class QuickAccessWindow : EditorWindow
         GetWindow<QuickAccessWindow>("Favorites");
     }
 
-    private void OnGUI()
-    {
-        scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
-
-        DrawList(prefabList, "Prefabs");
-
-        DrawList(sceneList, "Scenes");
-
-        DrawList(scriptList, "Scripts");
-
-        EditorGUILayout.EndScrollView();
-
-        EditorGUILayout.BeginHorizontal();
-
-        if (GUILayout.Button("Add Prefab"))
-        {
-            prefabList.Add(null);
-        }
-
-        if (GUILayout.Button("Add Scene"))
-        {
-            sceneList.Add(null);
-        }
-
-        if (GUILayout.Button("Add Script"))
-        {
-            scriptList.Add(null);
-        }
-
-        EditorGUILayout.EndHorizontal();
-    }
-
     private void OnEnable()
     {
         LoadData();
+        SetupReorderableList();
     }
 
-    private void OnDisable()
+    private void SetupReorderableList()
     {
-        SaveData();
+        reorderableList = new ReorderableList(items, typeof(QuickItem), true, true, true, true);
+
+        reorderableList.drawHeaderCallback = (Rect rect) =>
+        {
+            EditorGUI.LabelField(rect, "Drag your favorites in here");
+        };
+
+        reorderableList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+        {
+            var element = items[index];
+            rect.y += 2;
+            rect.height = EditorGUIUtility.singleLineHeight;
+
+            float buttonWidth = 50;
+            float removeWidth = 20;
+            float fieldWidth = rect.width - buttonWidth - removeWidth - 10;
+
+            // Open button on the left
+            if (GUI.Button(new Rect(rect.x, rect.y, buttonWidth, rect.height), "Open"))
+            {
+                if (element.asset != null)
+                    AssetDatabase.OpenAsset(element.asset);
+            }
+
+            // Object field next
+            EditorGUI.BeginChangeCheck();
+            element.asset = EditorGUI.ObjectField(new Rect(rect.x + buttonWidth + 5, rect.y, fieldWidth, rect.height), element.asset, typeof(UnityEngine.Object), false);
+            if (EditorGUI.EndChangeCheck())
+            {
+                SaveData();
+            }
+
+            // Remove button on the right
+            if (GUI.Button(new Rect(rect.x + buttonWidth + 5 + fieldWidth + 5, rect.y, removeWidth, rect.height), "X"))
+            {
+                items.RemoveAt(index);
+                SaveData();
+            }
+        };
+
+        reorderableList.onAddCallback = (ReorderableList list) =>
+        {
+            items.Add(new QuickItem());
+            SaveData();
+        };
+
+        reorderableList.onReorderCallback = (ReorderableList list) =>
+        {
+            SaveData();
+        };
     }
 
-    private void LoadData()
+    private void OnGUI()
     {
-        LoadList(prefabList, "Prefab");
-        LoadList(sceneList, "Scene");
-        LoadList(scriptList, "Script");
+        if (reorderableList != null)
+            reorderableList.DoLayoutList();
     }
 
     private void SaveData()
     {
-        SaveList(prefabList, "Prefab");
-        SaveList(sceneList, "Scene");
-        SaveList(scriptList, "Script");
-    }
-
-    private void DrawList<T>(List<T> list, string label) where T : UnityEngine.Object
-    {
-        if (list.Count == 0) return;
-
-        GUILayout.Label(label, EditorStyles.boldLabel);
-
-        for (int i = 0; i < list.Count; i++)
+        EditorPrefs.SetInt("QuickAccessCount", items.Count);
+        for (int i = 0; i < items.Count; i++)
         {
-            EditorGUILayout.BeginHorizontal();
-
-            // Open or Edit the asset
-            if (GUILayout.Button("Edit", GUILayout.Width(50)))
-            {
-                AssetDatabase.OpenAsset(list[i]);
-            }
-
-            // Draw object field to edit the object in the list
-            list[i] = (T)EditorGUILayout.ObjectField(list[i], typeof(T), false);
-
-            // Remove button
-            if (GUILayout.Button("X", GUILayout.Width(20)))
-            {
-                list.RemoveAt(i);
-            }
-
-            EditorGUILayout.EndHorizontal();
+            string path = items[i].asset != null ? AssetDatabase.GetAssetPath(items[i].asset) : "";
+            EditorPrefs.SetString("QuickAccessPath" + i, path);
         }
     }
 
-    private void LoadList<T>(List<T> list, string pathRootName) where T : UnityEngine.Object
+    private void LoadData()
     {
-        list.Clear();
-        int count = EditorPrefs.GetInt(pathRootName + "Count", 0);
+        items.Clear();
+        int count = EditorPrefs.GetInt("QuickAccessCount", 0);
+
         for (int i = 0; i < count; i++)
         {
-            string path = EditorPrefs.GetString(pathRootName + "Path" + i, "");
-            if (!string.IsNullOrEmpty(path))
-            {
-                T prefab = AssetDatabase.LoadAssetAtPath<T>(path);
-                if (prefab != null)
-                {
-                    list.Add(prefab);
-                }
-            }
-        }
-    }
-
-    private void SaveList<T>(List<T> list, string pathRootName) where T : UnityEngine.Object
-    {
-        EditorPrefs.SetInt(pathRootName + "Count", list.Count);
-        for (int i = 0; i < list.Count; i++)
-        {
-            string path = AssetDatabase.GetAssetPath(list[i]);
-            EditorPrefs.SetString(pathRootName + "Path" + i, path);
+            string path = EditorPrefs.GetString("QuickAccessPath" + i, "");
+            UnityEngine.Object asset = !string.IsNullOrEmpty(path) ? AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(path) : null;
+            items.Add(new QuickItem { asset = asset });
         }
     }
 }
