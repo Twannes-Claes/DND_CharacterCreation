@@ -12,7 +12,10 @@ public class CanvasSwitcher : MonoBehaviour
     private Button _buttonSwitcher;
 
     [SerializeField]
-    private List<TMPro.TMP_InputField> _inputFields = new List<TMPro.TMP_InputField>();
+    private CanvasGroup _inputFieldGroup;
+
+    [SerializeField]
+    private TMPro.TMP_InputField _proficiencyBonus;
     #endregion
 
     #region LifeCycle
@@ -30,10 +33,7 @@ public class CanvasSwitcher : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            foreach (var field in _inputFields)
-            {
-                field.interactable = !field.IsInteractable();
-            }
+            _inputFieldGroup.interactable = !_inputFieldGroup.interactable;
         }
     }
     #endregion
