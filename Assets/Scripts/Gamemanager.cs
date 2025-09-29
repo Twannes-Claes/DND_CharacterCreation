@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-
+[DefaultExecutionOrder(-1)]
 public class Gamemanager : MonoBehaviour
 {
     #region Editor Fields
@@ -12,6 +12,8 @@ public class Gamemanager : MonoBehaviour
 
     #region Fields
     private Dictionary<ApiCategoryType, ApiCategoryResource> _cachedCategories = new Dictionary<ApiCategoryType, ApiCategoryResource>();
+
+    private Dictionary<int, CustomInput> _cachedInputFields = new Dictionary<int, CustomInput>();
     #endregion
 
     #region Properties
@@ -35,6 +37,17 @@ public class Gamemanager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    private void Start()
+    {
+        foreach (CustomInput field in _cachedInputFields.Values)
+        {
+            if (field != null)
+            {
+                field.ApplyInputToLinkedText();
+            }
+        }
+    }
     #endregion
 
     #region Functions
@@ -52,6 +65,16 @@ public class Gamemanager : MonoBehaviour
         }
 
         return result;
+    }
+
+    public void CacheInputField(CustomInput inputField)
+    {
+        int key = inputField.GetInstanceID();
+
+        if (!_cachedInputFields.ContainsKey(key))
+        {
+            _cachedInputFields[key] = inputField;
+        }
     }
     #endregion  
 }
