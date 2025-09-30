@@ -1,19 +1,23 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using System;
 
-[DefaultExecutionOrder(-1)]
+[DefaultExecutionOrder(-100)]
 public class Gamemanager : MonoBehaviour
 {
     #region Editor Fields
     [SerializeField]
     private DetailPanel _detailPanel;
+
+    [SerializeField]
+    private List<AbilityScoreInputField> _abilityScores;
     #endregion
 
     #region Fields
-    private Dictionary<ApiCategoryType, ApiCategoryResource> _cachedCategories = new Dictionary<ApiCategoryType, ApiCategoryResource>();
+    private readonly Dictionary<ApiCategoryType, ApiCategoryResource> _cachedCategories = new Dictionary<ApiCategoryType, ApiCategoryResource>();
 
-    private Dictionary<int, CustomInput> _cachedInputFields = new Dictionary<int, CustomInput>();
+    private readonly Dictionary<AbilityScores, AbilityScoreInputField> _cachedAbilityScores = new Dictionary<AbilityScores, AbilityScoreInputField>();
     #endregion
 
     #region Properties
@@ -31,6 +35,11 @@ public class Gamemanager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+
+            foreach (AbilityScoreInputField field in _abilityScores)
+            {
+                _cachedAbilityScores[field.AbilityScore] = field;
+            }
         }
         else
         {
@@ -40,17 +49,27 @@ public class Gamemanager : MonoBehaviour
 
     private void Start()
     {
-        foreach (CustomInput field in _cachedInputFields.Values)
+        //Simulate loading the ability scores and then setting the value
+
+        foreach (AbilityScoreInputField field in _cachedAbilityScores.Values)
         {
             if (field != null)
             {
-                field.ApplyInputToLinkedText();
+                field.OnAbilityScoreChanged?.Invoke(field.AbilityModifier);
             }
         }
     }
     #endregion
 
     #region Functions
+    public AbilityScoreInputField GetAbilityScore(AbilityScores abilityScore)
+    {
+        if (_cachedAbilityScores.ContainsKey(abilityScore) == false)
+            return null;
+
+        return _cachedAbilityScores[abilityScore];
+    }
+
     public async Task<ApiCategoryResource> FetchCategory(ApiCategoryType category)
     {
         if (_cachedCategories.TryGetValue(category, out var resource))
@@ -67,14 +86,21 @@ public class Gamemanager : MonoBehaviour
         return result;
     }
 
-    public void CacheInputField(CustomInput inputField)
+    public void AddAbilityScore(AbilityScoreInputField inputField)
     {
-        int key = inputField.GetInstanceID();
+        AbilityScores key = inputField.AbilityScore;
 
-        if (!_cachedInputFields.ContainsKey(key))
+        if (!_cachedAbilityScores.ContainsKey(key))
         {
-            _cachedInputFields[key] = inputField;
+            _cachedAbilityScores[key] = inputField;
         }
+    }
+
+    public void RemoveAbilityScore(AbilityScoreInputField inputField)
+    {
+        AbilityScores key = inputField.AbilityScore;
+
+        _cachedAbilityScores.Remove(key);
     }
     #endregion  
 }

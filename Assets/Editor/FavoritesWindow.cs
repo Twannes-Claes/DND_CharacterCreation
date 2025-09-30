@@ -11,7 +11,7 @@ public class QuickAccessWindow : EditorWindow
         public UnityEngine.Object asset;
     }
 
-    private List<QuickItem> items = new();
+    private readonly List<QuickItem> items = new();
     private ReorderableList reorderableList;
 
     [MenuItem("Twanny/Favorites Window")]
@@ -33,54 +33,55 @@ public class QuickAccessWindow : EditorWindow
 
     private void SetupReorderableList()
     {
-        reorderableList = new ReorderableList(items, typeof(QuickItem), true, true, true, true);
-
-        reorderableList.drawHeaderCallback = (Rect rect) =>
+        reorderableList = new ReorderableList(items, typeof(QuickItem), true, true, true, true)
         {
-            EditorGUI.LabelField(rect, "Drag your favorites in here");
-        };
-
-        reorderableList.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
-        {
-            var element = items[index];
-            rect.y += 2;
-            rect.height = EditorGUIUtility.singleLineHeight;
-
-            float buttonWidth = 50;
-            float removeWidth = 20;
-            float fieldWidth = rect.width - buttonWidth - removeWidth - 10;
-
-            if (GUI.Button(new Rect(rect.x, rect.y, buttonWidth, rect.height), "Open"))
+            drawHeaderCallback = (Rect rect) =>
             {
-                if (element.asset != null)
+                EditorGUI.LabelField(rect, "Drag your favorites in here");
+            },
+
+            drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+            {
+                var element = items[index];
+                rect.y += 2;
+                rect.height = EditorGUIUtility.singleLineHeight;
+
+                float buttonWidth = 50;
+                float removeWidth = 20;
+                float fieldWidth = rect.width - buttonWidth - removeWidth - 10;
+
+                if (GUI.Button(new Rect(rect.x, rect.y, buttonWidth, rect.height), "Open"))
                 {
-                    AssetDatabase.OpenAsset(element.asset);
+                    if (element.asset != null)
+                    {
+                        AssetDatabase.OpenAsset(element.asset);
+                    }
                 }
-            }
 
-            EditorGUI.BeginChangeCheck();
-            element.asset = EditorGUI.ObjectField(new Rect(rect.x + buttonWidth + 5, rect.y, fieldWidth, rect.height), element.asset, typeof(UnityEngine.Object), false);
-            if (EditorGUI.EndChangeCheck())
+                EditorGUI.BeginChangeCheck();
+                element.asset = EditorGUI.ObjectField(new Rect(rect.x + buttonWidth + 5, rect.y, fieldWidth, rect.height), element.asset, typeof(UnityEngine.Object), false);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    SaveData();
+                }
+
+                if (GUI.Button(new Rect(rect.x + buttonWidth + 5 + fieldWidth + 5, rect.y, removeWidth, rect.height), "X"))
+                {
+                    items.RemoveAt(index);
+                    SaveData();
+                }
+            },
+
+            onAddCallback = _ =>
+            {
+                items.Add(new QuickItem());
+                SaveData();
+            },
+
+            onReorderCallback = _ =>
             {
                 SaveData();
             }
-
-            if (GUI.Button(new Rect(rect.x + buttonWidth + 5 + fieldWidth + 5, rect.y, removeWidth, rect.height), "X"))
-            {
-                items.RemoveAt(index);
-                SaveData();
-            }
-        };
-
-        reorderableList.onAddCallback = _ =>
-        {
-            items.Add(new QuickItem());
-            SaveData();
-        };
-
-        reorderableList.onReorderCallback = _ =>
-        {
-            SaveData();
         };
     }
 
@@ -114,8 +115,4 @@ public class QuickAccessWindow : EditorWindow
             items.Add(new QuickItem { asset = asset });
         }
     }
-    //private void CleanupNullAssets()
-    //{
-    //    items.RemoveAll(item => item.asset == null);
-    //}
 }

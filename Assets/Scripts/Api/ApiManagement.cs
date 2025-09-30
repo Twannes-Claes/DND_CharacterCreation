@@ -4,6 +4,51 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System;
 
+public enum SkillTypes
+{
+    StrengthModifier = 0,
+    StrengthSavingThrow,
+    Athletics,
+    DexterityModifier,
+    DexteritySavingThrow,
+    Acrobatics,
+    SleightOfHand,
+    Stealth,
+    Initiative,
+    ConstitutionModifier,
+    ConstitutionSavingThrow,
+    IntelligenceModfier,
+    IntelligenceSavingThrow,
+    Arcana,
+    History,
+    Investigation,
+    Nature,
+    Religion,
+    WisdomModifier,
+    WisdomSavingThrow,
+    AnimalHandling,
+    Insight,
+    Medicine,
+    Perception,
+    Survival,
+    CharismaModifier,
+    CharismaSavingThrow,
+    Deception,
+    Intimidation,
+    Performance,
+    Persuasion
+};
+
+public enum AbilityScores
+{
+    Strength = 0,
+    Dexterity,
+    Constitution,
+    Intelligence,
+    Wisdom,
+    Charisma
+};
+
 public enum ApiCategoryType
 {
     AbilityScores,
