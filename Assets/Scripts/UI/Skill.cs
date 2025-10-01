@@ -24,7 +24,7 @@ public class Skill : MonoBehaviour
     private bool _hasProficiency = false;
     private bool _hasExpertise = false;
 
-    private int _proficiencyBonus = 2;
+    private readonly int _proficiencyBonus = 2;
     #endregion
 
     #region Properties

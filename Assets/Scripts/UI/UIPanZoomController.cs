@@ -56,13 +56,11 @@ public class UIPanZoomController : MonoBehaviour
     private void HandleZoom()
     {
         float zoomDelta = 0f;
-        Vector2 zoomCenter = Vector2.zero;
 
         #if UNITY_EDITOR
         if (Input.mouseScrollDelta.y != 0f)
         {
             zoomDelta = Input.mouseScrollDelta.y * zoomSpeed;
-            zoomCenter = Input.mousePosition;
         }
         #endif
 
@@ -78,21 +76,19 @@ public class UIPanZoomController : MonoBehaviour
             float currDist = (t0.position - t1.position).magnitude;
 
             zoomDelta = (currDist - prevDist) * zoomSpeed * 0.01f;
-            zoomCenter = (t0.position + t1.position) * 0.5f;
         }
 
         if (zoomDelta != 0f)
         {
-            ZoomAt(zoomCenter, zoomDelta);
+            ZoomAt(zoomDelta);
         }
     }
 
-    private void ZoomAt(Vector2 screenPoint, float delta)
+    private void ZoomAt(float delta)
     {
         float oldZoom = zoomCamera.orthographicSize;
         float newZoom = Mathf.Clamp(oldZoom - delta, minOrthoSize, maxOrthoSize);
     
-        //If almost no change, don't do it might appear floaty
         if (Mathf.Approximately(newZoom, oldZoom)) return;
     
         targetZoom = newZoom;
@@ -108,7 +104,7 @@ public class UIPanZoomController : MonoBehaviour
             float dx = -Input.GetAxis("Mouse X");
             float dy = -Input.GetAxis("Mouse Y");
 
-            Vector3 delta = new Vector3(dx, dy, 0f) * panSpeed * 5;
+            Vector3 delta = 5 * panSpeed * new Vector3(dx, dy, 0f);
 
             targetPan += 60f * Time.deltaTime * delta;
         }
@@ -142,13 +138,11 @@ public class UIPanZoomController : MonoBehaviour
         float vertExtent = targetZoom;
         float horExtent = vertExtent * zoomCamera.aspect;
 
-        // Calculate allowed ranges
         float clampMinX = minX + horExtent;
         float clampMaxX = maxX - horExtent;
         float clampMinY = minY + vertExtent;
         float clampMaxY = maxY - vertExtent;
 
-        // If camera is bigger than content, center the camera
         if (clampMinX > clampMaxX)
         {
             clampMinX = clampMaxX = (minX + maxX) / 2f;
