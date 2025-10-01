@@ -10702,7 +10702,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2d9e1f983a9c354ba46d06ff06ee582, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inputType: 8
+  _inputType: 9
 --- !u!1 &1255518455 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4427943743559302935, guid: 0f983dfa73fe5f8409c3a77881313026,
@@ -14530,7 +14530,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2d9e1f983a9c354ba46d06ff06ee582, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inputType: 7
+  _inputType: 8
 --- !u!1 &1736712297 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4269984320043020257, guid: d739f0bc609dcc14692ea85c1ae96f20,
