@@ -106,9 +106,7 @@ public class Skill : MonoBehaviour
 
     private void SetText(int modifier)
     {
-        string sign = modifier >= 0 ? "+" : "";
-
-        _textComp.SetText($"{sign}{modifier}");
+        _textComp.SetText(Gamemanager.SignedNumberToString(modifier));
     }
     #endregion
 }

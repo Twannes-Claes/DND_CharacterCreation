@@ -19,7 +19,7 @@ public class AbilityScoreInputField : MonoBehaviour
 
     public AbilityScores AbilityScore => _abilityScore;
 
-    public int AbilityModifier => AbilityScoreToModifier(_inputField.text);
+    public int AbilityModifier => Gamemanager.AbilityScoreToModifier(_inputField.text);
     #endregion
 
     #region LifeCycle
@@ -47,14 +47,5 @@ public class AbilityScoreInputField : MonoBehaviour
     #endregion
 
     #region Functions
-    private static int AbilityScoreToModifier(string text)
-    {
-        if (int.TryParse(text, out int abilityScore))
-        {
-            return Mathf.FloorToInt((abilityScore - 10) / 2f);
-        }
-
-        return -99;
-    }
     #endregion
 }

@@ -14,6 +14,7 @@ public class GeneralInputField : MonoBehaviour
         Race,
         Alignment,
         ExperiencePoints,
+        ProfiencyBonus,
         ArmorClass,
         Speed,
         MaxHitPoints,
@@ -85,6 +86,7 @@ public class GeneralInputField : MonoBehaviour
     {
         switch (_inputType)
         {
+            case GeneralInputType.ProfiencyBonus:
             case GeneralInputType.Speed:
             {
                 _inputField.text = Regex.Replace(_inputField.text, @"\D", "");
@@ -100,9 +102,18 @@ public class GeneralInputField : MonoBehaviour
     {
         switch (_inputType)
         {
+            case GeneralInputType.ProfiencyBonus:
+            {
+                if (int.TryParse(_inputField.text, out int modifier))
+                {
+                    _inputField.text = Gamemanager.SignedNumberToString(modifier);
+                }
+            }
+            break;
+
             case GeneralInputType.Speed:
             {
-                    _inputField.text += " ft.";
+                _inputField.text += " ft.";
             }
             break;
 

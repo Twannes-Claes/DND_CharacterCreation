@@ -107,6 +107,22 @@ public class Gamemanager : MonoBehaviour
 
         _cachedAbilityScores.Remove(key);
     }
+
+    public static int AbilityScoreToModifier(string text)
+    {
+        if (int.TryParse(text, out int abilityScore))
+        {
+            return Mathf.FloorToInt((abilityScore - 10) / 2f);
+        }
+
+        return -99;
+    }
+
+    public static string SignedNumberToString(int modifier)
+    {
+        return modifier >= 0 ? $"+{modifier}" : modifier.ToString();
+    }
+
     #endregion  
 }
 
