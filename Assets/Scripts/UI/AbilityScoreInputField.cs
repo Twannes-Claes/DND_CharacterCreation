@@ -54,7 +54,7 @@ public class AbilityScoreInputField : MonoBehaviour
             return Mathf.FloorToInt((abilityScore - 10) / 2f);
         }
 
-        return -9;
+        return -99;
     }
     #endregion
 }

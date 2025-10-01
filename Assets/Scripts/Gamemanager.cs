@@ -22,6 +22,11 @@ public class Gamemanager : MonoBehaviour
 
     #region Properties
     public DetailPanel DetailPanel => _detailPanel;
+
+    public bool ExpertiseInput
+    {
+        get { return Input.GetKey(KeyCode.X); }
+    }
     #endregion 
 
     #region Statics
