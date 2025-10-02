@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class UIPanZoomController : MonoBehaviour
 {
@@ -44,6 +45,9 @@ public class UIPanZoomController : MonoBehaviour
     #region GameLoop
     private void Update()
     {
+        if (EventSystem.current != null && EventSystem.current.currentSelectedGameObject != null)
+            return;
+
         HandleZoom();
         HandlePan();
 
@@ -55,6 +59,9 @@ public class UIPanZoomController : MonoBehaviour
     #region Functions
     private void HandleZoom()
     {
+        if (Gamemanager.Instance.StopScrolling)
+            return;
+        
         float zoomDelta = 0f;
 
         #if UNITY_EDITOR
@@ -96,6 +103,9 @@ public class UIPanZoomController : MonoBehaviour
 
     private void HandlePan()
     {
+       // if (Gamemanager.Instance.StopPanning)
+       //     return;
+
         if (panOnlyWhenZoomed && zoomCamera.orthographicSize >= maxOrthoSize - float.Epsilon) return;
 
         #if UNITY_EDITOR

@@ -93,6 +93,12 @@ public class GeneralInputField : MonoBehaviour
             }
             break;
 
+            case GeneralInputType.Feats:
+            {
+                _inputField.richText = false;
+            }
+            break;
+
             default:
             break;
         }
@@ -114,6 +120,12 @@ public class GeneralInputField : MonoBehaviour
             case GeneralInputType.Speed:
             {
                 _inputField.text += " ft.";
+            }
+            break;
+
+            case GeneralInputType.Feats:
+            {
+                _inputField.richText = true;
             }
             break;
 

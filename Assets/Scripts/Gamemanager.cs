@@ -23,6 +23,9 @@ public class Gamemanager : MonoBehaviour
     #region Properties
     public DetailPanel DetailPanel => _detailPanel;
 
+    public bool StopScrolling = false;
+    public bool StopPanning = false;
+
     public bool ExpertiseInput
     {
         get { return Input.GetKey(KeyCode.X); }
