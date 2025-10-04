@@ -17,7 +17,7 @@ public class LongPressEvent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     public Action OnLongPress;
     #endregion
 
-    #region Unity Callbacks
+    #region GameLoop
     private void Update()
     {
         if (_isPointerDown)
@@ -32,7 +32,7 @@ public class LongPressEvent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     }
     #endregion
 
-    #region Pointer Handlers
+    #region Interface
     public void OnPointerDown(PointerEventData eventData)
     {
         _isPointerDown = true;
@@ -55,7 +55,7 @@ public class LongPressEvent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     }
     #endregion
 
-    #region Helpers
+    #region Functions
     private void Reset()
     {
         _canInvoke = false;

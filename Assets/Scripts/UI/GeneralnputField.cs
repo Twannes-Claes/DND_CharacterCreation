@@ -27,7 +27,8 @@ public class GeneralInputField : MonoBehaviour
         Flaws,
         Feats,
         Profiencies,
-        Equipment
+        Equipment,
+        TemporaryHitPoints
     };
 
     #region Editor Fields
@@ -65,6 +66,7 @@ public class GeneralInputField : MonoBehaviour
 
     private void OnDisable()
     {
+        _inputField.onSelect.RemoveAllListeners();
         _inputField.onEndEdit.RemoveAllListeners();
     }
     #endregion

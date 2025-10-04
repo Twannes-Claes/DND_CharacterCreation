@@ -21,7 +21,7 @@ public class ForwardScrollToScrollRect : MonoBehaviour, IScrollHandler, IBeginDr
     }
     #endregion
 
-    #region Functions
+    #region Interface
     public void OnScroll(PointerEventData eventData)
     {
         if (!_isMobile && _scrollRect != null)
@@ -55,7 +55,5 @@ public class ForwardScrollToScrollRect : MonoBehaviour, IScrollHandler, IBeginDr
             Gamemanager.Instance.StopPanning = false;
         }
     }
-
-    
     #endregion
 }

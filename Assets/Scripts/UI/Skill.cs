@@ -124,12 +124,26 @@ public class Skill : MonoBehaviour
             abilityModifier += _proficiencyBonus * expertiseBonus;
         }
 
+        if (_skill == SkillTypes.PassivePerception)
+        {
+            abilityModifier += 10;
+            SetText(abilityModifier, false);
+            return;
+        }
+
         SetText(abilityModifier);
     }
 
-    private void SetText(int modifier)
+    private void SetText(int modifier, bool signedNumber = true)
     {
-        _textComp.SetText(Gamemanager.SignedNumberToString(modifier));
+        if (signedNumber)
+        {
+            _textComp.SetText(Gamemanager.SignedNumberToString(modifier));
+        }
+        else
+        {
+            _textComp.SetText(modifier.ToString());
+        }
     }
     #endregion
 }

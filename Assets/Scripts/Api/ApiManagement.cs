@@ -36,7 +36,8 @@ public enum SkillTypes
     Deception,
     Intimidation,
     Performance,
-    Persuasion
+    Persuasion,
+    PassivePerception
 };
 
 public enum AbilityScores
