@@ -160,6 +160,7 @@ GameObject:
   m_Component:
   - component: {fileID: 315379193049035685}
   - component: {fileID: 3564176213698354828}
+  - component: {fileID: 1971995048602693488}
   m_Layer: 6
   m_Name: ProfiencyToggle
   m_TagString: Untagged
@@ -235,6 +236,18 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_IsOn: 1
+--- !u!114 &1971995048602693488
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5916635380112809326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5735d83f2a9d979448ff8ca8a68466de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7609162693351442986
 GameObject:
   m_ObjectHideFlags: 0

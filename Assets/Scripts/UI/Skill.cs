@@ -19,7 +19,9 @@ public class Skill : MonoBehaviour
     #region Fields
     private TMP_Text _textComp = null;
     private GameObject _expertiseImage = null;
+
     private AbilityScoreInputField _abilityScore = null;
+    private LongPressEvent _longPress = null;
 
     private bool _hasProficiency = false;
     private bool _hasExpertise = false;
@@ -38,6 +40,7 @@ public class Skill : MonoBehaviour
         if (_proficiencyToggle != null)
         {
             SetProficiency(_proficiencyToggle.isOn);
+            _longPress = _proficiencyToggle.gameObject.GetComponent<LongPressEvent>();
         }
     }
 
@@ -50,6 +53,11 @@ public class Skill : MonoBehaviour
         {
             _proficiencyToggle.onValueChanged.AddListener(SetProficiency);
             _expertiseImage = _proficiencyToggle.transform.GetChild(0).GetChild(1).gameObject;
+
+            if (_longPress != null)
+            {
+                _longPress.OnLongPress += MakeExpertised; 
+            }
         }
     }
 
@@ -63,6 +71,11 @@ public class Skill : MonoBehaviour
         if (_proficiencyToggle != null)
         {
             _proficiencyToggle.onValueChanged.RemoveAllListeners();
+
+            if (_longPress != null)
+            {
+                _longPress.OnLongPress -= MakeExpertised;
+            }
         }
     }
 
@@ -74,16 +87,21 @@ public class Skill : MonoBehaviour
     #region Functions
     public void SetProficiency(bool isProficient)
     {
+        SetProficiency(isProficient, false);
+    }
+
+    public void SetProficiency(bool isProficient, bool isExpertised)
+    {
         if (_proficiencyToggle == null) 
             return;
 
-        if (_hasProficiency == isProficient) 
+        if (_hasProficiency == isProficient)
             return;
 
         _hasProficiency = isProficient;
         _hasExpertise = false;
 
-        if (Gamemanager.Instance.ExpertiseInput && _hasProficiency)
+        if ((Gamemanager.Instance.ExpertiseInput || isExpertised) && _hasProficiency)
         {
             _hasExpertise = true;
         }
@@ -91,6 +109,11 @@ public class Skill : MonoBehaviour
         _expertiseImage.SetActive(_hasExpertise);
 
         CalculateModifier(_abilityScore.AbilityModifier);
+    }
+
+    public void MakeExpertised()
+    {
+        SetProficiency(true, true);
     }
 
     private void CalculateModifier(int abilityModifier)
