@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using System.Text.RegularExpressions;
+using System;
 
 [RequireComponent(typeof(TMP_InputField))]
 public class GeneralInputField : MonoBehaviour
@@ -39,6 +40,8 @@ public class GeneralInputField : MonoBehaviour
     #region Fields
     private TMP_InputField _inputField;
     private RectTransform _transform;
+
+    private Action<int> OnAbilityScoreChangedLogic;
     #endregion
 
     #region LifeCycle
@@ -62,12 +65,16 @@ public class GeneralInputField : MonoBehaviour
             ResetTransform();
             ApplyPostEditLogic();
         });
+
+        ApplyEnableLogic();
     }
 
     private void OnDisable()
     {
         _inputField.onSelect.RemoveAllListeners();
         _inputField.onEndEdit.RemoveAllListeners();
+
+        ApplyDisableLogic();
     }
     #endregion
 
@@ -131,8 +138,85 @@ public class GeneralInputField : MonoBehaviour
             }
             break;
 
+            case GeneralInputType.MaxHitDice:
+            {
+                _inputField.text = _inputField.text.Replace(" ", "");
+
+                var match = Regex.Match(_inputField.text, @"^([0-9]*d[0-9]+)([+-]\d+)?$");
+
+                if (!match.Success)
+                    return;
+
+                string dicePart = match.Groups[1].Value;
+                string modifier = Gamemanager.SignedNumberToString(Gamemanager.Instance.GetAbilityScore(AbilityScores.Constitution).AbilityModifier);
+
+                if (Gamemanager.Instance.GetAbilityScore(AbilityScores.Constitution).AbilityModifier == 0)
+                {
+                    modifier = string.Empty;
+                }
+
+                _inputField.text = dicePart + modifier;
+            }
+            break;
+
             default:
             break;
+        }
+    }
+
+    private void ApplyEnableLogic()
+    {
+        switch (_inputType)
+        {
+            case GeneralInputType.MaxHitDice:
+            {
+                OnAbilityScoreChangedLogic = (score) =>
+                {
+                    _inputField.text = _inputField.text.Replace(" ", "");
+
+                    var match = Regex.Match(_inputField.text, @"^([0-9]*d[0-9]+)([+-]\d+)?$");
+
+                    if (!match.Success)
+                        return;
+
+                    string dicePart = match.Groups[1].Value;
+
+                    string modifier = Gamemanager.SignedNumberToString(score);
+
+                    if (score == 0)
+                    {
+                        modifier = string.Empty;
+                    }
+
+                    _inputField.text = dicePart + modifier;
+                };
+
+                Gamemanager.Instance.GetAbilityScore(AbilityScores.Constitution).OnAbilityScoreChanged += OnAbilityScoreChangedLogic;
+            }
+            break;
+
+            default:
+                break;
+        }
+    }
+
+    private void ApplyDisableLogic()
+    {
+        switch (_inputType)
+        {
+            case GeneralInputType.MaxHitDice:
+            {
+                if (OnAbilityScoreChangedLogic != null)
+                {
+                    Gamemanager.Instance.GetAbilityScore(AbilityScores.Constitution).OnAbilityScoreChanged -= OnAbilityScoreChangedLogic;
+
+                    OnAbilityScoreChangedLogic = null;
+                }
+            }
+            break;
+
+            default:
+                break;
         }
     }
     #endregion

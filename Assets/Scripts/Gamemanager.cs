@@ -121,9 +121,24 @@ public class Gamemanager : MonoBehaviour
         return -99;
     }
 
+    public static int AbilityScoreToModifier(int abilityScore)
+    {
+        return Mathf.FloorToInt((abilityScore - 10) / 2f);
+    }
+
     public static string SignedNumberToString(int modifier)
     {
         return modifier >= 0 ? $"+{modifier}" : modifier.ToString();
+    }
+
+    public static string AbilityScoreToSignedModifier(string text)
+    {
+        return SignedNumberToString(AbilityScoreToModifier(text));
+    }
+
+    public static string AbilityScoreToSignedModifier(int score)
+    {
+        return SignedNumberToString(AbilityScoreToModifier(score));
     }
 
     #endregion  
