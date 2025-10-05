@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using System;
+using System.Text.RegularExpressions;
 
 [DefaultExecutionOrder(-100)]
 public class Gamemanager : MonoBehaviour
@@ -139,6 +140,26 @@ public class Gamemanager : MonoBehaviour
     public static string AbilityScoreToSignedModifier(int score)
     {
         return SignedNumberToString(AbilityScoreToModifier(score));
+    }
+
+    public static string UpdateDiceModifier(int score, string diceText)
+    {
+        diceText = diceText.Replace(" ", "");
+
+        var match = Regex.Match(diceText, @"^([0-9]*d[0-9]+)([+-]\d+)?$");
+
+        if (!match.Success)
+            return string.Empty; ;
+
+        string dicePart = match.Groups[1].Value;
+        string modifier = Gamemanager.SignedNumberToString(score);
+
+        if (score == 0)
+        {
+            modifier = string.Empty;
+        }
+
+        return dicePart + modifier;
     }
 
     #endregion  

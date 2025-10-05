@@ -103,8 +103,8 @@ public class UIPanZoomController : MonoBehaviour
 
     private void HandlePan()
     {
-       // if (Gamemanager.Instance.StopPanning)
-       //     return;
+       if (Gamemanager.Instance.StopScrolling)
+           return;
 
         if (panOnlyWhenZoomed && zoomCamera.orthographicSize >= maxOrthoSize - float.Epsilon) return;
 

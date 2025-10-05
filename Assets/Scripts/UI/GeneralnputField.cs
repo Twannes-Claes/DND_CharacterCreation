@@ -29,7 +29,13 @@ public class GeneralInputField : MonoBehaviour
         Feats,
         Profiencies,
         Equipment,
-        TemporaryHitPoints
+        TemporaryHitPoints,
+        Copper,
+        Silver,
+        Electrum,
+        Gold,
+        Platinum,
+        Inspiration
     };
 
     #region Editor Fields
@@ -64,6 +70,9 @@ public class GeneralInputField : MonoBehaviour
 
             ResetTransform();
             ApplyPostEditLogic();
+
+            //Save
+            //Save[_inputType] = _inputField.text;
         });
 
         ApplyEnableLogic();
@@ -140,22 +149,7 @@ public class GeneralInputField : MonoBehaviour
 
             case GeneralInputType.MaxHitDice:
             {
-                _inputField.text = _inputField.text.Replace(" ", "");
-
-                var match = Regex.Match(_inputField.text, @"^([0-9]*d[0-9]+)([+-]\d+)?$");
-
-                if (!match.Success)
-                    return;
-
-                string dicePart = match.Groups[1].Value;
-                string modifier = Gamemanager.SignedNumberToString(Gamemanager.Instance.GetAbilityScore(AbilityScores.Constitution).AbilityModifier);
-
-                if (Gamemanager.Instance.GetAbilityScore(AbilityScores.Constitution).AbilityModifier == 0)
-                {
-                    modifier = string.Empty;
-                }
-
-                _inputField.text = dicePart + modifier;
+                _inputField.text = Gamemanager.UpdateDiceModifier(Gamemanager.Instance.GetAbilityScore(AbilityScores.Constitution).AbilityModifier, _inputField.text);
             }
             break;
 
@@ -172,23 +166,7 @@ public class GeneralInputField : MonoBehaviour
             {
                 OnAbilityScoreChangedLogic = (score) =>
                 {
-                    _inputField.text = _inputField.text.Replace(" ", "");
-
-                    var match = Regex.Match(_inputField.text, @"^([0-9]*d[0-9]+)([+-]\d+)?$");
-
-                    if (!match.Success)
-                        return;
-
-                    string dicePart = match.Groups[1].Value;
-
-                    string modifier = Gamemanager.SignedNumberToString(score);
-
-                    if (score == 0)
-                    {
-                        modifier = string.Empty;
-                    }
-
-                    _inputField.text = dicePart + modifier;
+                    _inputField.text = Gamemanager.UpdateDiceModifier(score, _inputField.text);
                 };
 
                 Gamemanager.Instance.GetAbilityScore(AbilityScores.Constitution).OnAbilityScoreChanged += OnAbilityScoreChangedLogic;
