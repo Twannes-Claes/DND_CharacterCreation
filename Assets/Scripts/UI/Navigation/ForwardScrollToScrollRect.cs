@@ -35,7 +35,7 @@ public class ForwardScrollToScrollRect : MonoBehaviour, IScrollHandler, IBeginDr
         if (_isMobile && _scrollRect != null)
         {
             _scrollRect.OnBeginDrag(eventData);
-            GameManager.Instance.StopPanning = true;
+            UIPanZoomController.StopPanning = true;
         }
     }
 
@@ -52,7 +52,7 @@ public class ForwardScrollToScrollRect : MonoBehaviour, IScrollHandler, IBeginDr
         if (_isMobile && _scrollRect != null)
         {
             _scrollRect.OnEndDrag(eventData);
-            GameManager.Instance.StopPanning = false;
+            UIPanZoomController.StopPanning = false;
         }
     }
     #endregion

@@ -32,6 +32,11 @@ public class UIPanZoomController : MonoBehaviour
     private Vector3 panVelocity;
     #endregion
 
+    #region Statics
+    public static bool StopScrolling { get; set; } = false;
+    public static bool StopPanning { get; set; } = false;
+    #endregion
+
     #region LifeCycle
     private void Start()
     {
@@ -59,7 +64,7 @@ public class UIPanZoomController : MonoBehaviour
     #region Functions
     private void HandleZoom()
     {
-        if (GameManager.Instance.StopScrolling)
+        if (StopScrolling)
             return;
         
         float zoomDelta = 0f;
@@ -103,7 +108,7 @@ public class UIPanZoomController : MonoBehaviour
 
     private void HandlePan()
     {
-       if (GameManager.Instance.StopScrolling)
+       if (StopScrolling)
            return;
 
         if (panOnlyWhenZoomed && zoomCamera.orthographicSize >= maxOrthoSize - float.Epsilon) return;

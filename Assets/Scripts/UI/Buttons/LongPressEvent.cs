@@ -20,15 +20,16 @@ public class LongPressEvent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     #region GameLoop
     private void Update()
     {
-        if (_isPointerDown)
-        {
-            _timer += Time.deltaTime;
+        if (!_isPointerDown)
+            return;
+        
+        _timer += Time.deltaTime;
 
-            if (_timer >= _holdTime)
-            {
-                _canInvoke = true;
-            }
+        if (_timer >= _holdTime)
+        {
+            _canInvoke = true;
         }
+        
     }
     #endregion
 

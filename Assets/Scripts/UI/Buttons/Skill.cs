@@ -1,19 +1,15 @@
 using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
+using System.Linq;
 
 [RequireComponent(typeof(TMP_Text))]
-public class Skill : MonoBehaviour
+public class Skill : MonoBehaviour, ISaveable
 {
     #region Editor Fields
-    [SerializeField]
-    private AbilityScores _source;
-
-    [SerializeField]
-    private SkillTypes _skill;
-
-    [SerializeField]
-    private Toggle _proficiencyToggle;
+    [SerializeField] private AbilityScores _source;
+    [SerializeField] private SkillTypes _skill;
+    [SerializeField] private Toggle _proficiencyToggle;
     #endregion
 
     #region Fields
@@ -26,7 +22,7 @@ public class Skill : MonoBehaviour
     private bool _hasProficiency = false;
     private bool _hasExpertise = false;
 
-    private readonly int _proficiencyBonus = 2;
+    private bool _queueExpertise = false;
     #endregion
 
     #region Properties
@@ -39,7 +35,6 @@ public class Skill : MonoBehaviour
 
         if (_proficiencyToggle != null)
         {
-            SetProficiency(_proficiencyToggle.isOn);
             _longPress = _proficiencyToggle.gameObject.GetComponent<LongPressEvent>();
         }
     }
@@ -56,7 +51,7 @@ public class Skill : MonoBehaviour
 
             if (_longPress != null)
             {
-                _longPress.OnLongPress += MakeExpertised; 
+                _longPress.OnLongPress += QueueExpertise; 
             }
         }
     }
@@ -74,11 +69,10 @@ public class Skill : MonoBehaviour
 
             if (_longPress != null)
             {
-                _longPress.OnLongPress -= MakeExpertised;
+                _longPress.OnLongPress -= QueueExpertise;
             }
         }
     }
-
     #endregion
 
     #region GameLoop
@@ -92,23 +86,29 @@ public class Skill : MonoBehaviour
 
     public void SetProficiency(bool isProficient, bool isExpertised)
     {
-        if (_proficiencyToggle == null) 
+        if (_proficiencyToggle == null || _hasProficiency == isProficient) 
             return;
 
-        if (_hasProficiency == isProficient)
-            return;
+        if (_queueExpertise)
+        {
+            isExpertised = true;
+            _queueExpertise = false;
+        }
 
         _hasProficiency = isProficient;
         _hasExpertise = isExpertised && _hasProficiency;
 
+        _proficiencyToggle.isOn = isProficient;
         _expertiseImage.SetActive(_hasExpertise);
 
         CalculateModifier(_abilityScore.AbilityModifier);
     }
 
-    public void MakeExpertised()
+    public void QueueExpertise()
     {
-        SetProficiency(true, true);
+        Debug.Log("Exppertise queued");
+        if (_hasExpertise == false)
+            _queueExpertise = true;
     }
 
     private void CalculateModifier(int abilityModifier)
@@ -116,7 +116,9 @@ public class Skill : MonoBehaviour
         if (_hasProficiency)
         {
             int expertiseBonus = _hasExpertise ? 2 : 1;
-            abilityModifier += _proficiencyBonus * expertiseBonus;
+            int proficiencyBonus = int.Parse(GameManager.Instance.GetCharacterInfo(GeneralInputType.ProfiencyBonus));
+
+            abilityModifier += proficiencyBonus * expertiseBonus;
         }
 
         if (_skill == SkillTypes.PassivePerception)
@@ -131,13 +133,24 @@ public class Skill : MonoBehaviour
 
     private void SetText(int modifier, bool signedNumber = true)
     {
-        if (signedNumber)
+        _textComp.SetText(signedNumber ? Utils.ToSignedNumber(modifier) : modifier.ToString());
+    }
+
+    public void Save(Character sheet)
+    {
+        //TODO:
+    }
+
+    public void Load(Character sheet)
+    {
+        if (_proficiencyToggle == null)
+            return;
+
+        Proficiency proficiency = sheet.SkillProficiencies.FirstOrDefault(p => p.skill == (int)_skill);
+
+        if (proficiency.skill == (int)_skill)
         {
-            _textComp.SetText(GameManager.SignedNumberToString(modifier));
-        }
-        else
-        {
-            _textComp.SetText(modifier.ToString());
+            SetProficiency(true, proficiency.expertised);
         }
     }
     #endregion

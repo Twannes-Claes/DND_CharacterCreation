@@ -19,7 +19,7 @@ public class StopScrollOnEnter : MonoBehaviour, IPointerEnterHandler, IPointerEx
     {
         if (!_isMobile)
         {
-            GameManager.Instance.StopScrolling = true;
+            UIPanZoomController.StopScrolling = true;
         }
     }
 
@@ -27,7 +27,7 @@ public class StopScrollOnEnter : MonoBehaviour, IPointerEnterHandler, IPointerEx
     {
         if (!_isMobile)
         {
-            GameManager.Instance.StopScrolling = false;
+            UIPanZoomController.StopScrolling = false;
         }
     }
     #endregion

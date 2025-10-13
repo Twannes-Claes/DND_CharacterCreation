@@ -7,8 +7,7 @@ using System;
 public class GeneralInputField : MonoBehaviour, ISaveable
 {
     #region Editor Fields
-    [SerializeField]
-    private GeneralInputType _inputType;
+    [SerializeField] private GeneralInputType _inputType;
     #endregion
 
     #region Fields
@@ -99,7 +98,9 @@ public class GeneralInputField : MonoBehaviour, ISaveable
             {
                 if (int.TryParse(_inputField.text, out int modifier))
                 {
-                    _inputField.text = GameManager.SignedNumberToString(modifier);
+                    _inputField.text = Utils.ToSignedNumber(modifier);
+                    Save(GameManager.Instance.CharacterSheet);
+                    GameManager.Instance.RefreshAbilityScores();
                 }
             }
             break;
@@ -120,7 +121,7 @@ public class GeneralInputField : MonoBehaviour, ISaveable
 
             case GeneralInputType.MaxHitDice:
             {
-                _inputField.text = GameManager.UpdateDiceModifier(GameManager.Instance.GetAbilityScore(AbilityScores.Constitution).AbilityModifier, _inputField.text);
+                _inputField.text = Utils.UpdateDiceModifier(GameManager.Instance.GetAbilityScore(AbilityScores.Constitution).AbilityModifier, _inputField.text);
             }
             break;
 
@@ -137,7 +138,7 @@ public class GeneralInputField : MonoBehaviour, ISaveable
             {
                 OnAbilityScoreChangedLogic = (score) =>
                 {
-                    _inputField.text = GameManager.UpdateDiceModifier(score, _inputField.text);
+                    _inputField.text = Utils.UpdateDiceModifier(score, _inputField.text);
                 };
 
                 GameManager.Instance.GetAbilityScore(AbilityScores.Constitution).OnAbilityScoreChanged += OnAbilityScoreChangedLogic;

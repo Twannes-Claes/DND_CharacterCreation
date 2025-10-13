@@ -6,8 +6,7 @@ using System;
 public class AbilityScoreInputField : MonoBehaviour, ISaveable
 {
     #region Editor Fields
-    [SerializeField]
-    private AbilityScores _abilityScore;
+    [SerializeField] private AbilityScores _abilityScore;
     #endregion
 
     #region Fields
@@ -19,7 +18,7 @@ public class AbilityScoreInputField : MonoBehaviour, ISaveable
 
     public AbilityScores AbilityScore => _abilityScore;
 
-    public int AbilityModifier => GameManager.AbilityScoreToModifier(_inputField.text);
+    public int AbilityModifier => Utils.ToModifier(_inputField.text);
     #endregion
 
     #region LifeCycle

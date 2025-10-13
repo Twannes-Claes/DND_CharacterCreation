@@ -53,26 +53,6 @@ public enum Currencies
     PlatinumPieces
 }
 
-//public enum CharacterInfoStrings
-//{
-//    CharacterName = 0,
-//    ClassLevel,
-//    Background,
-//    PlayerName,
-//    Race,
-//    Alignment,
-//    ExperiencePoints,
-//    Personality,
-//    Ideals,
-//    Bonds,
-//    Flaws,
-//    Copper,
-//    Silver,
-//    Electrum,
-//    Gold,
-//    Platinum,
-//};
-
 public enum GeneralInputType
 {
     CharacterName = 0,

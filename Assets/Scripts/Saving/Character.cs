@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 [Serializable]
@@ -24,7 +24,7 @@ public class Character
         "",                      //Ideals,
         "",                      //Bonds,
         "",                      //Flaws,
-        "",                      //Feats,
+        "  <b>Disciple Of life:</b>​ Your healing spells are particulary effective. Whenever you restore hit points to a creature with a spell of 1st level or higher, the creature regains additional hit points equal to 2+ the spell's level.​",                      //Feats,
         "<b>Proficiencies:</b>", //Proficiencies,
         "0",                     //TemporaryHitPoints
         "0",                     //Copper,
@@ -36,17 +36,25 @@ public class Character
         "<b>Languages:</b>"      //Languages
     };
 
-    //public int Inspiration = 0;
-    //public int ProfiencyBonus = 0;
-    //public int ArmorClass = 0;
-    //public int Speed = 0;
-    //
-    //public int CurrentHitPoints = 0;
-    //public int MaxHitPoints = 0;
-    //public int TemporaryHitPoints = 0;
-    //
-    //public string TotalHitDice = "1d8";
-    //public int CurrentHitDice = 0;
-
     public List<int> AbilityScores = new List<int> { 12, 14, 15, 8, 9, 10 };
+
+    public List<Proficiency> SkillProficiencies = new List<Proficiency>
+    {
+        new Proficiency(1, false),
+        new Proficiency(4, false),
+        new Proficiency(10, true)
+    };
+}
+
+[Serializable]
+public struct Proficiency
+{
+    public int skill;
+    public bool expertised;
+
+    public Proficiency(int skill, bool expertised)
+    {
+        this.skill = skill;
+        this.expertised = expertised;
+    }
 }
