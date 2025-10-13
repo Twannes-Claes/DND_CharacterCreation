@@ -4,40 +4,8 @@ using System.Text.RegularExpressions;
 using System;
 
 [RequireComponent(typeof(TMP_InputField))]
-public class GeneralInputField : MonoBehaviour
+public class GeneralInputField : MonoBehaviour, ISaveable
 {
-    public enum GeneralInputType
-    {
-        CharacterName = 0,
-        ClassLevel,
-        Background,
-        PlayerName,
-        Race,
-        Alignment,
-        ExperiencePoints,
-        ProfiencyBonus,
-        ArmorClass,
-        Speed,
-        MaxHitPoints,
-        CurrentHitPoints,
-        MaxHitDice,
-        CurrentHitDice,
-        Personality,
-        Ideals,
-        Bonds,
-        Flaws,
-        Feats,
-        Profiencies,
-        Equipment,
-        TemporaryHitPoints,
-        Copper,
-        Silver,
-        Electrum,
-        Gold,
-        Platinum,
-        Inspiration
-    };
-
     #region Editor Fields
     [SerializeField]
     private GeneralInputType _inputType;
@@ -71,8 +39,7 @@ public class GeneralInputField : MonoBehaviour
             ResetTransform();
             ApplyPostEditLogic();
 
-            //Save
-            //Save[_inputType] = _inputField.text;
+            Save(GameManager.Instance.CharacterSheet);
         });
 
         ApplyEnableLogic();
@@ -111,6 +78,8 @@ public class GeneralInputField : MonoBehaviour
             }
             break;
 
+            case GeneralInputType.Proficiencies:
+            case GeneralInputType.Languages:
             case GeneralInputType.Feats:
             {
                 _inputField.richText = false;
@@ -130,7 +99,7 @@ public class GeneralInputField : MonoBehaviour
             {
                 if (int.TryParse(_inputField.text, out int modifier))
                 {
-                    _inputField.text = Gamemanager.SignedNumberToString(modifier);
+                    _inputField.text = GameManager.SignedNumberToString(modifier);
                 }
             }
             break;
@@ -141,6 +110,8 @@ public class GeneralInputField : MonoBehaviour
             }
             break;
 
+            case GeneralInputType.Proficiencies:
+            case GeneralInputType.Languages:
             case GeneralInputType.Feats:
             {
                 _inputField.richText = true;
@@ -149,7 +120,7 @@ public class GeneralInputField : MonoBehaviour
 
             case GeneralInputType.MaxHitDice:
             {
-                _inputField.text = Gamemanager.UpdateDiceModifier(Gamemanager.Instance.GetAbilityScore(AbilityScores.Constitution).AbilityModifier, _inputField.text);
+                _inputField.text = GameManager.UpdateDiceModifier(GameManager.Instance.GetAbilityScore(AbilityScores.Constitution).AbilityModifier, _inputField.text);
             }
             break;
 
@@ -166,10 +137,10 @@ public class GeneralInputField : MonoBehaviour
             {
                 OnAbilityScoreChangedLogic = (score) =>
                 {
-                    _inputField.text = Gamemanager.UpdateDiceModifier(score, _inputField.text);
+                    _inputField.text = GameManager.UpdateDiceModifier(score, _inputField.text);
                 };
 
-                Gamemanager.Instance.GetAbilityScore(AbilityScores.Constitution).OnAbilityScoreChanged += OnAbilityScoreChangedLogic;
+                GameManager.Instance.GetAbilityScore(AbilityScores.Constitution).OnAbilityScoreChanged += OnAbilityScoreChangedLogic;
             }
             break;
 
@@ -186,7 +157,7 @@ public class GeneralInputField : MonoBehaviour
             {
                 if (OnAbilityScoreChangedLogic != null)
                 {
-                    Gamemanager.Instance.GetAbilityScore(AbilityScores.Constitution).OnAbilityScoreChanged -= OnAbilityScoreChangedLogic;
+                    GameManager.Instance.GetAbilityScore(AbilityScores.Constitution).OnAbilityScoreChanged -= OnAbilityScoreChangedLogic;
 
                     OnAbilityScoreChangedLogic = null;
                 }
@@ -196,6 +167,19 @@ public class GeneralInputField : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    public void Save(Character sheet)
+    {
+        sheet.CharacterInfo[(int)_inputType] = _inputField.text;
+    }
+
+    public void Load(Character sheet)
+    {
+        _inputField.text = sheet.CharacterInfo[(int)_inputType];
+
+        ApplyPreEditLogic();
+        ApplyPostEditLogic();
     }
     #endregion
 }

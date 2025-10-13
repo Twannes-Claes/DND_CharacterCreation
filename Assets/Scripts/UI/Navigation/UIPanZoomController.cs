@@ -59,7 +59,7 @@ public class UIPanZoomController : MonoBehaviour
     #region Functions
     private void HandleZoom()
     {
-        if (Gamemanager.Instance.StopScrolling)
+        if (GameManager.Instance.StopScrolling)
             return;
         
         float zoomDelta = 0f;
@@ -103,7 +103,7 @@ public class UIPanZoomController : MonoBehaviour
 
     private void HandlePan()
     {
-       if (Gamemanager.Instance.StopScrolling)
+       if (GameManager.Instance.StopScrolling)
            return;
 
         if (panOnlyWhenZoomed && zoomCamera.orthographicSize >= maxOrthoSize - float.Epsilon) return;

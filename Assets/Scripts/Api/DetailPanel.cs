@@ -8,7 +8,7 @@ public class DetailPanel : MonoBehaviour
     private TextMeshProUGUI _titleText;
     #endregion
 
-    public void SetTitle(string text)
+    public void SetInfo(string text)
     {
         _titleText.SetText(text);
     }

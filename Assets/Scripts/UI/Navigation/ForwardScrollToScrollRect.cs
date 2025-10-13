@@ -35,7 +35,7 @@ public class ForwardScrollToScrollRect : MonoBehaviour, IScrollHandler, IBeginDr
         if (_isMobile && _scrollRect != null)
         {
             _scrollRect.OnBeginDrag(eventData);
-            Gamemanager.Instance.StopPanning = true;
+            GameManager.Instance.StopPanning = true;
         }
     }
 
@@ -52,7 +52,7 @@ public class ForwardScrollToScrollRect : MonoBehaviour, IScrollHandler, IBeginDr
         if (_isMobile && _scrollRect != null)
         {
             _scrollRect.OnEndDrag(eventData);
-            Gamemanager.Instance.StopPanning = false;
+            GameManager.Instance.StopPanning = false;
         }
     }
     #endregion

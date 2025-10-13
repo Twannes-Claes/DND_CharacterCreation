@@ -4,80 +4,6 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System;
 
-public enum SkillTypes
-{
-    StrengthModifier = 0,
-    StrengthSavingThrow,
-    Athletics,
-    DexterityModifier,
-    DexteritySavingThrow,
-    Acrobatics,
-    SleightOfHand,
-    Stealth,
-    Initiative,
-    ConstitutionModifier,
-    ConstitutionSavingThrow,
-    IntelligenceModfier,
-    IntelligenceSavingThrow,
-    Arcana,
-    History,
-    Investigation,
-    Nature,
-    Religion,
-    WisdomModifier,
-    WisdomSavingThrow,
-    AnimalHandling,
-    Insight,
-    Medicine,
-    Perception,
-    Survival,
-    CharismaModifier,
-    CharismaSavingThrow,
-    Deception,
-    Intimidation,
-    Performance,
-    Persuasion,
-    PassivePerception
-};
-
-public enum AbilityScores
-{
-    Strength = 0,
-    Dexterity,
-    Constitution,
-    Intelligence,
-    Wisdom,
-    Charisma
-};
-
-public enum ApiCategoryType
-{
-    AbilityScores,
-    Alignments,
-    Backgrounds,
-    Classes,
-    Conditions,
-    DamageTypes,
-    Equipment,
-    EquipmentCategories,
-    Feats,
-    Features,
-    Languages,
-    MagicItems,
-    MagicSchools,
-    Monsters,
-    Proficiencies,
-    Races,
-    RuleSections,
-    Rules,
-    Skills,
-    Spells,
-    Subclasses,
-    Subraces,
-    Traits,
-    WeaponProperties
-}
-
 public static class ApiHelper
 {
     #region Static Fields
@@ -200,3 +126,62 @@ public static class ApiHelper
     //}
     #endregion
 }
+
+#region OLD_API
+
+//public void AddToApiLinks(ApiResource resource, ApiCategoryType category = ApiCategoryType.None)
+//{
+//    if (category == ApiCategoryType.None)
+//    {
+//        category = LatestCategory;
+//    }
+//
+//    if (!_cachedApiResources.TryGetValue(category, out List<ApiResource> resources))
+//    {
+//        resources = new List<ApiResource>();
+//        _cachedApiResources[category] = resources;
+//    }
+//
+//    if (resources.Contains(resource))
+//    {
+//        resources.Remove(resource);
+//    }
+//    else
+//    {
+//        resources.Add(resource);
+//    }
+//
+//    var sb = new StringBuilder();
+//    sb.Append($"  <b>{category}:</b> ");
+//
+//    for (int i = 0; i < resources.Count; i++)
+//    {
+//        sb.Append(resources[i].name);
+//
+//        if (i < resources.Count - 1)
+//        {
+//            sb.Append(", ");
+//        }
+//    }
+//
+//    _fillableApiText[(int)category].text = sb.ToString();
+//}
+
+//public async Task<ApiCategoryResource> FetchCategory(ApiCategoryType category)
+//{
+//    LatestCategory = category;
+//
+//    if (_cachedApiCategories.TryGetValue(category, out var resource))
+//    {
+//        return resource;
+//    }
+//
+//    ApiCategoryResource result = await ApiHelper.FetchCategoryAsync(category); ;
+//    if (result != null)
+//    {
+//        _cachedApiCategories[category] = result;
+//    }
+//
+//    return result;
+//}
+#endregion

@@ -33,7 +33,7 @@ public class ItemListManager : MonoBehaviour
     #endregion
 
     #region Functions
-    public async void LoadCategoryItems(ApiCategoryType category)
+    public void LoadCategoryItems(ApiCategoryType category)
     {
         foreach (Transform child in _contentParent)
         { 
@@ -42,18 +42,18 @@ public class ItemListManager : MonoBehaviour
 
         _loadIcon.SetActive(true);
 
-        ApiCategoryResource categoryResource = await Gamemanager.Instance.FetchCategory(category);
-        if (categoryResource == null) return;
-
-        _loadIcon.SetActive(false);
-        _loadIcon.transform.rotation = Quaternion.identity;
-
-        foreach (ApiResource item in categoryResource.results)
-        {
-            GameObject itemGO = Instantiate(_itemButtonPrefab, _contentParent);
-            ItemButton itemButton = itemGO.GetComponent<ItemButton>();
-            itemButton.Initialize(item);
-        }
+        //ApiCategoryResource categoryResource = await GameManager.Instance.FetchCategory(category);
+        //if (categoryResource == null) return;
+        //
+        //_loadIcon.SetActive(false);
+        //_loadIcon.transform.rotation = Quaternion.identity;
+        //
+        //foreach (ApiResource item in categoryResource.results)
+        //{
+        //    GameObject itemGO = Instantiate(_itemButtonPrefab, _contentParent);
+        //    ItemButton itemButton = itemGO.GetComponent<ItemButton>();
+        //    itemButton.Initialize(item);
+        //}
     }
 
     private void OnBackClicked()
@@ -67,7 +67,7 @@ public class ItemListManager : MonoBehaviour
 
         _categoryPanel.SetActive(true);
 
-        Gamemanager.Instance.DetailPanel.SetTitle(string.Empty);
+        //GameManager.Instance.DetailPanel.SetInfo(string.Empty);
     }
     #endregion
 }

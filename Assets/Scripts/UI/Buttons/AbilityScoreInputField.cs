@@ -3,7 +3,7 @@ using TMPro;
 using System;
 
 [RequireComponent(typeof(TMP_InputField))]
-public class AbilityScoreInputField : MonoBehaviour
+public class AbilityScoreInputField : MonoBehaviour, ISaveable
 {
     #region Editor Fields
     [SerializeField]
@@ -19,7 +19,7 @@ public class AbilityScoreInputField : MonoBehaviour
 
     public AbilityScores AbilityScore => _abilityScore;
 
-    public int AbilityModifier => Gamemanager.AbilityScoreToModifier(_inputField.text);
+    public int AbilityModifier => GameManager.AbilityScoreToModifier(_inputField.text);
     #endregion
 
     #region LifeCycle
@@ -33,6 +33,8 @@ public class AbilityScoreInputField : MonoBehaviour
         _inputField.onEndEdit.AddListener((text) =>
         {
             OnAbilityScoreChanged?.Invoke(AbilityModifier);
+
+            Save(GameManager.Instance.CharacterSheet);
         });
     }
 
@@ -47,5 +49,20 @@ public class AbilityScoreInputField : MonoBehaviour
     #endregion
 
     #region Functions
+    public void SetText(string text)
+    {
+        _inputField.text = text;
+    }
+
+    public void Save(Character sheet)
+    {
+        sheet.AbilityScores[(int)_abilityScore] = int.Parse(_inputField.text);
+    }
+
+    public void Load(Character sheet)
+    {
+        SetText(sheet.AbilityScores[(int)_abilityScore].ToString());
+        OnAbilityScoreChanged?.Invoke(AbilityModifier);
+    }
     #endregion
 }

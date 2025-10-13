@@ -3,38 +3,31 @@ using System.Threading.Tasks;
 using UnityEngine;
 using System;
 using System.Text.RegularExpressions;
+using System.Text;
+using System.Linq;
+using System.IO;
 
 [DefaultExecutionOrder(-100)]
-public class Gamemanager : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
     #region Editor Fields
-    [SerializeField]
-    private DetailPanel _detailPanel;
-
     [SerializeField]
     private List<AbilityScoreInputField> _abilityScores;
     #endregion
 
     #region Fields
-    private readonly Dictionary<ApiCategoryType, ApiCategoryResource> _cachedCategories = new Dictionary<ApiCategoryType, ApiCategoryResource>();
-
-    private readonly Dictionary<AbilityScores, AbilityScoreInputField> _cachedAbilityScores = new Dictionary<AbilityScores, AbilityScoreInputField>();
+    private readonly Dictionary<AbilityScores, AbilityScoreInputField> _abilityScoreDict = new Dictionary<AbilityScores, AbilityScoreInputField>();
     #endregion
 
     #region Properties
-    public DetailPanel DetailPanel => _detailPanel;
+    public Character CharacterSheet { get; set; } = null;
 
-    public bool StopScrolling = false;
-    public bool StopPanning = false;
-
-    public bool ExpertiseInput
-    {
-        get { return Input.GetKey(KeyCode.X); }
-    }
+    public bool StopScrolling { get; set; } = false;
+    public bool StopPanning { get; set; } = false;
     #endregion 
 
     #region Statics
-    public static Gamemanager Instance { get; private set; }
+    public static GameManager Instance { get; private set; }
     #endregion
 
     #region LifeCycle
@@ -47,7 +40,7 @@ public class Gamemanager : MonoBehaviour
 
             foreach (AbilityScoreInputField field in _abilityScores)
             {
-                _cachedAbilityScores[field.AbilityScore] = field;
+                _abilityScoreDict[field.AbilityScore] = field;
             }
         }
         else
@@ -58,58 +51,45 @@ public class Gamemanager : MonoBehaviour
 
     private void Start()
     {
-        //Simulate loading the ability scores and then setting the value
+        var filePath = Path.Combine(Application.persistentDataPath, "character.json");
 
-        foreach (AbilityScoreInputField field in _cachedAbilityScores.Values)
+        if (File.Exists(filePath))
         {
-            if (field != null)
-            {
-                field.OnAbilityScoreChanged?.Invoke(field.AbilityModifier);
-            }
+            string json = File.ReadAllText(filePath);
+            CharacterSheet = JsonUtility.FromJson<Character>(json);
+            Debug.Log("Character loaded successfully!");
         }
+        else
+        {
+            CharacterSheet = new Character();
+            Debug.Log("No saved character found.");
+        }
+
+        List<ISaveable> saveables = FindObjectsOfType<MonoBehaviour>(true).OfType<ISaveable>().ToList();
+
+        foreach (var save in saveables)
+        {
+            save.Load(CharacterSheet);
+        }
+    }
+
+    private void OnApplicationQuit()
+    {
+        var filePath = Path.Combine(Application.persistentDataPath, "character.json");
+        string json = JsonUtility.ToJson(CharacterSheet, true);
+        File.WriteAllText(filePath, json);
+        Debug.Log($"Character saved to: {filePath}");
+        Debug.Log(JsonUtility.ToJson(CharacterSheet, true));
     }
     #endregion
 
     #region Functions
     public AbilityScoreInputField GetAbilityScore(AbilityScores abilityScore)
     {
-        if (_cachedAbilityScores.ContainsKey(abilityScore) == false)
+        if (_abilityScoreDict.ContainsKey(abilityScore) == false)
             return null;
 
-        return _cachedAbilityScores[abilityScore];
-    }
-
-    public async Task<ApiCategoryResource> FetchCategory(ApiCategoryType category)
-    {
-        if (_cachedCategories.TryGetValue(category, out var resource))
-        {
-            return resource;
-        }
-
-        ApiCategoryResource result = await ApiHelper.FetchCategoryAsync(category); ;
-        if (result != null)
-        {
-            _cachedCategories[category] = result;
-        }
-
-        return result;
-    }
-
-    public void AddAbilityScore(AbilityScoreInputField inputField)
-    {
-        AbilityScores key = inputField.AbilityScore;
-
-        if (!_cachedAbilityScores.ContainsKey(key))
-        {
-            _cachedAbilityScores[key] = inputField;
-        }
-    }
-
-    public void RemoveAbilityScore(AbilityScoreInputField inputField)
-    {
-        AbilityScores key = inputField.AbilityScore;
-
-        _cachedAbilityScores.Remove(key);
+        return _abilityScoreDict[abilityScore];
     }
 
     public static int AbilityScoreToModifier(string text)
@@ -142,6 +122,7 @@ public class Gamemanager : MonoBehaviour
         return SignedNumberToString(AbilityScoreToModifier(score));
     }
 
+    //2d8+3, modifier changed to +4 for example => 2d8+4
     public static string UpdateDiceModifier(int score, string diceText)
     {
         diceText = diceText.Replace(" ", "");
@@ -152,7 +133,7 @@ public class Gamemanager : MonoBehaviour
             return string.Empty; ;
 
         string dicePart = match.Groups[1].Value;
-        string modifier = Gamemanager.SignedNumberToString(score);
+        string modifier = GameManager.SignedNumberToString(score);
 
         if (score == 0)
         {

@@ -1,6 +1,35 @@
 using Newtonsoft.Json;
 using System;
 
+public enum ApiCategoryType
+{
+    Proficiencies = 0,
+    Languages = 1,
+    AbilityScores,
+    Alignments,
+    Backgrounds,
+    Classes,
+    Conditions,
+    DamageTypes,
+    Equipment,
+    EquipmentCategories,
+    Feats,
+    Features,
+    MagicItems,
+    MagicSchools,
+    Monsters,
+    Races,
+    RuleSections,
+    Rules,
+    Skills,
+    Spells,
+    Subclasses,
+    Subraces,
+    Traits,
+    WeaponProperties,
+    None,
+}
+
 [Serializable]
 public class ApiCategoryResource
 {

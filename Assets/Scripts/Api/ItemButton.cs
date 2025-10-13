@@ -37,7 +37,8 @@ public class ItemButton : MonoBehaviour
 
     private void OnClicked()
     {
-        Gamemanager.Instance.DetailPanel.SetTitle(_itemResource.name);
+        //GameManager.Instance.DetailPanel.SetInfo(_itemResource.name);
+        //GameManager.Instance.AddToApiLinks(_itemResource);
     }
     #endregion
 }

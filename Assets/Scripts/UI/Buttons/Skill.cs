@@ -46,7 +46,7 @@ public class Skill : MonoBehaviour
 
     private void OnEnable()
     {
-        _abilityScore = Gamemanager.Instance.GetAbilityScore(_source);
+        _abilityScore = GameManager.Instance.GetAbilityScore(_source);
         _abilityScore.OnAbilityScoreChanged += CalculateModifier;
 
         if (_proficiencyToggle != null)
@@ -99,12 +99,7 @@ public class Skill : MonoBehaviour
             return;
 
         _hasProficiency = isProficient;
-        _hasExpertise = false;
-
-        if ((Gamemanager.Instance.ExpertiseInput || isExpertised) && _hasProficiency)
-        {
-            _hasExpertise = true;
-        }
+        _hasExpertise = isExpertised && _hasProficiency;
 
         _expertiseImage.SetActive(_hasExpertise);
 
@@ -138,7 +133,7 @@ public class Skill : MonoBehaviour
     {
         if (signedNumber)
         {
-            _textComp.SetText(Gamemanager.SignedNumberToString(modifier));
+            _textComp.SetText(GameManager.SignedNumberToString(modifier));
         }
         else
         {
