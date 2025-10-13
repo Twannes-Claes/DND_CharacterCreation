@@ -102,6 +102,7 @@ public class Skill : MonoBehaviour, ISaveable
         _expertiseImage.SetActive(_hasExpertise);
 
         CalculateModifier(_abilityScore.AbilityModifier);
+        Save(GameManager.Instance.CharacterSheet);
     }
 
     public void QueueExpertise()
@@ -138,7 +139,16 @@ public class Skill : MonoBehaviour, ISaveable
 
     public void Save(Character sheet)
     {
-        //TODO:
+        Proficiency proficiency = sheet.SkillProficiencies.FirstOrDefault(p => p.skill == (int)_skill);
+
+        if (proficiency.skill == 0 /*default*/ && _hasProficiency)
+        {
+            sheet.SkillProficiencies.Add(new Proficiency((int)_skill, _hasExpertise));
+        }
+        else if (proficiency.skill > 0 && _hasProficiency == false)
+        {
+            sheet.SkillProficiencies.Remove(proficiency);
+        }
     }
 
     public void Load(Character sheet)

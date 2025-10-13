@@ -14,7 +14,7 @@ public class Character
         "",                      //Alignment,
         "0",                     //ExperiencePoints,
         "+2",                    //ProfiencyBonus,
-        "10",                    //ArmorClass,
+        "11",                    //ArmorClass,
         "25",                    //Speed,
         "10",                    //MaxHitPoints,
         "10",                    //CurrentHitPoints,

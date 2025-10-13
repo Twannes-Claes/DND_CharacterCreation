@@ -69,12 +69,10 @@ public class UIPanZoomController : MonoBehaviour
         
         float zoomDelta = 0f;
 
-        #if UNITY_EDITOR
         if (Input.mouseScrollDelta.y != 0f)
         {
             zoomDelta = Input.mouseScrollDelta.y * zoomSpeed;
         }
-        #endif
 
         if (Input.touchCount == 2)
         {
@@ -113,7 +111,6 @@ public class UIPanZoomController : MonoBehaviour
 
         if (panOnlyWhenZoomed && zoomCamera.orthographicSize >= maxOrthoSize - float.Epsilon) return;
 
-        #if UNITY_EDITOR
         if (Input.GetMouseButton(0))
         {
             float dx = -Input.GetAxis("Mouse X");
@@ -123,7 +120,6 @@ public class UIPanZoomController : MonoBehaviour
 
             targetPan += 60f * Time.deltaTime * delta;
         }
-        #endif
 
         if (Input.touchCount == 1)
         {
