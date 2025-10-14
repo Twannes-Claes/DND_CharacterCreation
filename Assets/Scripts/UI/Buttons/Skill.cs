@@ -107,7 +107,6 @@ public class Skill : MonoBehaviour, ISaveable
 
     public void QueueExpertise()
     {
-        Debug.Log("Exppertise queued");
         if (_hasExpertise == false)
             _queueExpertise = true;
     }
