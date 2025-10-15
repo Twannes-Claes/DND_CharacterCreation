@@ -20,32 +20,32 @@ public class EquipmentField : MonoBehaviour
     #endregion
 
     #region LifeCycle
-    private void Awake()
-    {
-        Image imageComp = _removeButton.gameObject.GetComponent<Image>();
-        imageComp.sprite = Settings.Instance.Cross;
-        imageComp.color = Settings.Instance.Red;
-    }
-
     private void OnEnable() => _removeButton.onClick.AddListener(OnClick);
     private void OnDisable() => _removeButton.onClick.RemoveListener(OnClick);
     #endregion
 
     #region Functions
 
-    public void Initialize(Equipment equipment)
+    public void Initialize(Equipment equipment, bool isFirst)
     {
-        _nameInput.text = equipment.name;
-        _amountInput.text = equipment.amount.ToString();
-    }
-
-    public void SetFirst()
-    {
-        _isFirst = true;
+        _isFirst = isFirst;
 
         Image imageComp = _removeButton.gameObject.GetComponent<Image>();
-        imageComp.sprite = Settings.Instance.Checkmark;
-        imageComp.color = Settings.Instance.Green;
+
+        //Blank text if its the first one
+        if (isFirst)
+        {
+            imageComp.sprite = Settings.Instance.Checkmark;
+            imageComp.color = Settings.Instance.Green;
+
+            return;
+        }
+
+        _nameInput.text = equipment.name;
+        _amountInput.text = equipment.amount.ToString();
+
+        imageComp.sprite = Settings.Instance.Cross;
+        imageComp.color = Settings.Instance.Red;
     }
 
     public Equipment GetEquipment()

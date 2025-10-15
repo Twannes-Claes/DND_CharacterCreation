@@ -13,12 +13,12 @@ public class EquipmentManager : MonoBehaviour, ISaveable
     #endregion
 
     #region Functions
-    public void AddField(Equipment equipment)
+    public void AddField(Equipment equipment, bool asFirst = false)
     {
         if (Instantiate(_equipmentPrefab, this.transform).TryGetComponent(out EquipmentField equipField))
         {
             _equipments.Add(equipField);
-            equipField.Initialize(equipment);
+            equipField.Initialize(equipment, asFirst);
         }
     }
     public void RemoveField(EquipmentField field)
@@ -39,12 +39,8 @@ public class EquipmentManager : MonoBehaviour, ISaveable
 
         _equipments.Clear();
 
-        //Spawn first field and setup as first one
-        if (Instantiate(_equipmentPrefab, this.transform).TryGetComponent(out EquipmentField firstField))
-        {
-            _equipments.Add(firstField);
-            firstField.SetFirst();
-        }
+        //Spawn first field as empty
+        AddField(new Equipment(), true);
 
         for (int i = 0; i < sheet.Equipments.Count; i++)
         {
