@@ -27,15 +27,8 @@ public class EquipmentField : MonoBehaviour
         imageComp.color = Settings.Instance.Red;
     }
 
-    private void OnEnable()
-    {
-        _removeButton.onClick.AddListener(OnClick);
-    }
-
-    private void OnDisable()
-    {
-        _removeButton.onClick.RemoveAllListeners();
-    }
+    private void OnEnable() => _removeButton.onClick.AddListener(OnClick);
+    private void OnDisable() => _removeButton.onClick.RemoveListener(OnClick);
     #endregion
 
     #region Functions
@@ -57,12 +50,7 @@ public class EquipmentField : MonoBehaviour
 
     public Equipment GetEquipment()
     {
-        int amount = 0;
-
-        if (int.TryParse(_amountInput.text, out int result))
-        {
-            amount = result;
-        }
+        int.TryParse(_amountInput.text, out int amount);
 
         return new Equipment(_nameInput.text, amount);
     }
@@ -75,9 +63,9 @@ public class EquipmentField : MonoBehaviour
                 return;
 
             Manager.AddField(GetEquipment());
-
             _nameInput.text = string.Empty;
             _amountInput.text = string.Empty;
+
             return;
         }
 

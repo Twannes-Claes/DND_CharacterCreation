@@ -12,11 +12,7 @@ public class EquipmentManager : MonoBehaviour, ISaveable
     private List<EquipmentField> _equipments = new List<EquipmentField>();
     #endregion
 
-    #region LifeCycle
-    #endregion
-
     #region Functions
-
     public void AddField(Equipment equipment)
     {
         if (Instantiate(_equipmentPrefab, this.transform).TryGetComponent(out EquipmentField equipField))
@@ -34,28 +30,25 @@ public class EquipmentManager : MonoBehaviour, ISaveable
 
     public void Load(Character sheet)
     {
+        EquipmentField.Manager = this;
+
         foreach (Transform child in transform)
         {
             Destroy(child.gameObject);
         }
 
         _equipments.Clear();
-        EquipmentField.Manager = this;
 
-        for (int i = 0; i < sheet.Equipments.Count + 1; i++)
+        //Spawn first field and setup as first one
+        if (Instantiate(_equipmentPrefab, this.transform).TryGetComponent(out EquipmentField firstField))
         {
-            if (Instantiate(_equipmentPrefab, this.transform).TryGetComponent(out EquipmentField equipField))
-            {
-                _equipments.Add(equipField);
+            _equipments.Add(firstField);
+            firstField.SetFirst();
+        }
 
-                if (i == 0)
-                {
-                    equipField.SetFirst();
-                    continue;
-                }
-
-                equipField.Initialize(sheet.Equipments[i-1]);
-            }
+        for (int i = 0; i < sheet.Equipments.Count; i++)
+        {
+            AddField(sheet.Equipments[i]);
         }
     }
 
@@ -66,7 +59,11 @@ public class EquipmentManager : MonoBehaviour, ISaveable
         for (int i = 1; i < _equipments.Count; i++)
         {
             EquipmentField field = _equipments[i];
-            sheet.Equipments.Add(field.GetEquipment());
+
+            if (!string.IsNullOrWhiteSpace(field.name))
+            {
+                sheet.Equipments.Add(field.GetEquipment());
+            }
         }
     }
     #endregion
