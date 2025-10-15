@@ -23,8 +23,8 @@ public class EquipmentField : MonoBehaviour
     private void Awake()
     {
         Image imageComp = _removeButton.gameObject.GetComponent<Image>();
-        imageComp.sprite = Assets.Instance.Cross;
-        imageComp.color = Assets.Instance.Red;
+        imageComp.sprite = Settings.Instance.Cross;
+        imageComp.color = Settings.Instance.Red;
     }
 
     private void OnEnable()
@@ -51,8 +51,8 @@ public class EquipmentField : MonoBehaviour
         _isFirst = true;
 
         Image imageComp = _removeButton.gameObject.GetComponent<Image>();
-        imageComp.sprite = Assets.Instance.Checkmark;
-        imageComp.color = Assets.Instance.Green;
+        imageComp.sprite = Settings.Instance.Checkmark;
+        imageComp.color = Settings.Instance.Green;
     }
 
     public Equipment GetEquipment()

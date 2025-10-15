@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Assets : MonoBehaviour
+public class Settings : MonoBehaviour
 {
     #region Statics
-    public static Assets Instance { get; private set; }
+    public static Settings Instance { get; private set; }
     #endregion
 
     #region LifeCycle
@@ -30,5 +30,7 @@ public class Assets : MonoBehaviour
 
     public Sprite Checkmark;
     public Sprite Cross;
+
+    public float DesktopStartZoom = 700;
     #endregion
 }

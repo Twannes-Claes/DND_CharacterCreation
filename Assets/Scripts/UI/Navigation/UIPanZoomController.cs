@@ -44,6 +44,11 @@ public class UIPanZoomController : MonoBehaviour
 
         targetZoom = zoomCamera.orthographicSize;
         targetPan = zoomCamera.transform.position;
+
+        if (!Application.isMobilePlatform)
+        {
+            targetZoom = Settings.Instance.DesktopStartZoom;
+        }
     }
     #endregion
 
