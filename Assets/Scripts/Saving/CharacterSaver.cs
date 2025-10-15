@@ -7,6 +7,11 @@ public static class CharacterSaver
 
     public static Character Load()
     {
+        if (GameManager.Instance.FreshCharacter)
+        {
+            return new Character();
+        }
+
         if (PlayerPrefs.HasKey(CharacterKey))
         {
             string json = PlayerPrefs.GetString(CharacterKey);

@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour
     private readonly Dictionary<AbilityScores, AbilityScoreInputField> _abilityScoreDict = new Dictionary<AbilityScores, AbilityScoreInputField>();
 
     private List<ISaveable> _saveables = null;
+
+    public bool FreshCharacter = true;
     #endregion
 
     #region Properties

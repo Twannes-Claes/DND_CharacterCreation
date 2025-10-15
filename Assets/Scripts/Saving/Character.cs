@@ -44,6 +44,13 @@ public class Character
         new Proficiency(4, false),
         new Proficiency(10, true)
     };
+
+    public List<Equipment> Equipments = new List<Equipment>
+    {
+        new Equipment("Greatsword", 1),
+        new Equipment("Arrows", 25),
+        new Equipment("Flask of oil", 2)
+    };
 }
 
 [Serializable]
@@ -58,3 +65,18 @@ public struct Proficiency
         this.expertised = expertised;
     }
 }
+
+[Serializable]
+public struct Equipment
+{
+    public string name;
+    public int amount;
+
+    public Equipment(string name, int amount)
+    {
+        this.name = name;
+        this.amount = amount;
+    }
+}
+
+
