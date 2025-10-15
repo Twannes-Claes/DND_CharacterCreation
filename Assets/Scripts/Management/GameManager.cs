@@ -51,16 +51,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyUp(KeyCode.F1))
-        {
-            string json = CharacterSaver.Save(CharacterSheet);
-
-            WebGLFileSaver.SaveJson("CharacterSheet.json", json);
-        }
-    }
-
     private void OnApplicationQuit()
     {
         Debug.Log(CharacterSaver.Save(CharacterSheet));
