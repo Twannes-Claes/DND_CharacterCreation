@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
 
     #region Fields
     private readonly Dictionary<AbilityScores, AbilityScoreInputField> _abilityScoreDict = new Dictionary<AbilityScores, AbilityScoreInputField>();
+
+    private List<ISaveable> _saveables = null;
     #endregion
 
     #region Properties
@@ -43,23 +45,41 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        CharacterSheet = CharacterSaver.Load();
-
-        foreach (ISaveable saveable in FindObjectsOfType<MonoBehaviour>(true).OfType<ISaveable>().ToList())
-        {
-            saveable.Load(CharacterSheet);
-        }
-    }
-
-    private void OnApplicationQuit()
-    {
-        Debug.Log(CharacterSaver.Save(CharacterSheet));
+        _saveables = FindObjectsOfType<MonoBehaviour>(true).OfType<ISaveable>().ToList();
+        LoadSheet(CharacterSaver.Load());
     }
     #endregion
 
     #region Functions
-    public void Save()
+    public void LoadSaveables()
     {
+        foreach (ISaveable saveable in _saveables)
+        {
+            saveable.Load(CharacterSheet);
+        }
+    }
+    public void SaveSaveables()
+    {
+        foreach (ISaveable saveable in _saveables)
+        {
+            saveable.Save(CharacterSheet);
+        }
+    }
+
+    public void LoadSheet(Character save)
+    {
+        if (save == null)
+            return;
+
+        CharacterSheet = save;
+
+        LoadSaveables();
+    }
+
+    public void SaveSheet()
+    {
+        SaveSaveables();
+
         CharacterSaver.Save(CharacterSheet);
     }
 

@@ -21,6 +21,11 @@ public static class CharacterSaver
         return new Character();
     }
 
+    public static Character LoadJson(string json)
+    {
+        return JsonUtility.FromJson<Character>(json); ;
+    }
+
     public static string Save(Character character)
     {
         string json = JsonUtility.ToJson(character, true);

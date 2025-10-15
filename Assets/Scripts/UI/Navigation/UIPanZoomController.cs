@@ -120,8 +120,7 @@ public class UIPanZoomController : MonoBehaviour
 
             targetPan += 60f * Time.deltaTime * delta;
         }
-
-        if (Input.touchCount == 1)
+        else if (Input.touchCount == 1)
         {
             Touch t = Input.GetTouch(0);
             if (t.phase == TouchPhase.Moved)

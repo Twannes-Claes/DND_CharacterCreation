@@ -12,7 +12,7 @@ public class GeneralInputField : MonoBehaviour, ISaveable
 
     #region Fields
     private TMP_InputField _inputField;
-    private RectTransform _transform;
+    private RectTransform _textAreaTransform;
 
     private Action<int> OnAbilityScoreChangedLogic;
     #endregion
@@ -21,7 +21,7 @@ public class GeneralInputField : MonoBehaviour, ISaveable
     private void Awake()
     {
         _inputField = GetComponent<TMP_InputField>();
-        _transform = _inputField.textComponent.rectTransform;
+        _textAreaTransform = (RectTransform)_inputField.textComponent.rectTransform.parent;
     }
 
     private void OnEnable()
@@ -59,11 +59,14 @@ public class GeneralInputField : MonoBehaviour, ISaveable
     #region Functions
     private void ResetTransform()
     {
-        if (_transform.offsetMin == Vector2.zero && _transform.offsetMax == Vector2.zero)
-            return;
+        foreach (RectTransform rect in _textAreaTransform)
+        {
+            if (rect.offsetMin == Vector2.zero && rect.offsetMax == Vector2.zero)
+                return;
 
-        _transform.offsetMin = Vector2.zero;
-        _transform.offsetMax = Vector2.zero;
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
+        }
     }
 
     private void ApplyPreEditLogic()

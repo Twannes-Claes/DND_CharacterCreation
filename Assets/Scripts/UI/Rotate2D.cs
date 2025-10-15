@@ -7,6 +7,15 @@ public class Rotate2D : MonoBehaviour
     private float rotationSpeed = 90f;
     #endregion
 
+    #region LifeCycle
+
+    private void OnEnable()
+    {
+        transform.rotation = Quaternion.identity;
+    }
+
+    #endregion  
+
     #region GameLoop
     void Update()
     {
