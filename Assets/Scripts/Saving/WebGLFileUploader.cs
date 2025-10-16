@@ -17,6 +17,6 @@ public class WebGLFileUploader : MonoBehaviour
 
     public void OnFileUploaded(string json)
     {
-        GameManager.Instance.LoadSheet(CharacterSaver.LoadJson(json));
+        GameManager.Instance.LoadCharacter(json);
     }
 }

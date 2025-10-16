@@ -5,7 +5,7 @@ public static class CharacterSaver
 {
     private const string CharacterKey = "character";
 
-    public static Character Load()
+    public static Character LoadPersistent()
     {
         if (GameManager.Instance.FreshCharacter)
         {
@@ -26,18 +26,11 @@ public static class CharacterSaver
         return new Character();
     }
 
-    public static Character LoadJson(string json)
-    {
-        return JsonUtility.FromJson<Character>(json); ;
-    }
-
-    public static string Save(Character character)
+    public static string SavePersistent(Character character)
     {
         string json = JsonUtility.ToJson(character, true);
         PlayerPrefs.SetString(CharacterKey, json);
         PlayerPrefs.Save();
-
-        WebGLFileSaver.SaveJson("CharacterSheet.json", json);
 
         return json;
     }

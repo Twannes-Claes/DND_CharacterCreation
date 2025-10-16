@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         _saveables = FindObjectsOfType<MonoBehaviour>(true).OfType<ISaveable>().ToList();
-        LoadSheet(CharacterSaver.Load());
+        LoadCharacter(CharacterSaver.LoadPersistent());
     }
     #endregion
 
@@ -75,40 +75,48 @@ public class GameManager : MonoBehaviour
 
         EditModeToggled?.Invoke(EditMode);
 
-        SaveSheet();
+        SaveCharacter();
     }
 
-    public void LoadSaveables()
-    {
-        foreach (ISaveable saveable in _saveables)
-        {
-            saveable.Load(CharacterSheet);
-        }
-    }
-    public void SaveSaveables()
+    public void SaveCharacter()
     {
         foreach (ISaveable saveable in _saveables)
         {
             saveable.Save(CharacterSheet);
         }
+
+        CharacterSaver.SavePersistent(CharacterSheet);
     }
 
-    public void LoadSheet(Character save)
+    public void BackUpCharacter()
+    {
+        foreach (ISaveable saveable in _saveables)
+        {
+            saveable.Save(CharacterSheet);
+        }
+
+        WebGLFileSaver.SaveJson("CharacterSheet.json", CharacterSaver.SavePersistent(CharacterSheet));
+    }
+
+    public void LoadCharacter(string json)
+    {
+        LoadCharacter(JsonUtility.FromJson<Character>(json));
+    }
+
+    public void LoadCharacter(Character save)
     {
         if (save == null)
             return;
 
         CharacterSheet = save;
 
-        LoadSaveables();
+        foreach (ISaveable saveable in _saveables)
+        {
+            saveable.Load(CharacterSheet);
+        }
     }
 
-    public void SaveSheet()
-    {
-        SaveSaveables();
-
-        CharacterSaver.Save(CharacterSheet);
-    }
+    
 
     public string GetCharacterInfo(GeneralInputType type)
     {
