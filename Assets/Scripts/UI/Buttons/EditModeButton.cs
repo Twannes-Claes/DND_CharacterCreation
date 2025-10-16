@@ -13,6 +13,9 @@ public class EditModeButton : MonoBehaviour
 
     #region Fields
     private Button _button = null;
+
+    private const string TAG_ON = "Edit-ON";
+    private const string TAG_OFF= "Edit-OFF";
     #endregion
 
     #region LifeCycle
@@ -22,7 +25,7 @@ public class EditModeButton : MonoBehaviour
 
         _button.onClick.AddListener(OnClick);
 
-        _text.text = GameManager.Instance.EditMode ? "Edit-ON" : "Edit-OFF";
+        _text.text = GameManager.Instance.EditMode ? TAG_ON : TAG_OFF;
     }
 
     private void OnDisable()
@@ -36,7 +39,7 @@ public class EditModeButton : MonoBehaviour
     {
         GameManager.Instance.ToggleEditMode();
 
-        _text.text = GameManager.Instance.EditMode ? "Edit-ON" : "Edit-OFF";
+        _text.text = GameManager.Instance.EditMode ? TAG_ON : TAG_OFF;
     }
     #endregion
 }

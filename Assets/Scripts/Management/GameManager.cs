@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     #region Editor Fields
     [SerializeField] private List<AbilityScoreInputField> _abilityScores;
 
+    [SerializeField] private List<GameObject> _pages;
     [SerializeField] private List<CanvasGroup> _canvasGroups;
     #endregion
 
@@ -16,6 +17,8 @@ public class GameManager : MonoBehaviour
     private readonly Dictionary<AbilityScores, AbilityScoreInputField> _abilityScoreDict = new Dictionary<AbilityScores, AbilityScoreInputField>();
 
     private List<ISaveable> _saveables = null;
+
+    private int _activePage = 0;
     #endregion
 
     #region Properties
@@ -62,14 +65,6 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Functions
-    private void Update()
-    {
-        if (Input.GetKeyUp(KeyCode.F2))
-        {
-            ToggleEditMode();
-        }
-    }
-
     public void ToggleEditMode()
     {
         EditMode = !EditMode;
@@ -82,6 +77,24 @@ public class GameManager : MonoBehaviour
         {
             group.interactable = EditMode;
         }
+    }
+
+    public void MoveLeft()
+    {
+        _pages[_activePage].gameObject.SetActive(false);
+
+        _activePage = (_activePage - 1 + _pages.Count) % _pages.Count;
+
+        _pages[_activePage].gameObject.SetActive(true);
+    }
+
+    public void MoveRight()
+    {
+        _pages[_activePage].gameObject.SetActive(false);
+
+        _activePage = (_activePage + 1) % _pages.Count;
+
+        _pages[_activePage].gameObject.SetActive(true);
     }
 
     public void SaveCharacter()
@@ -121,8 +134,6 @@ public class GameManager : MonoBehaviour
             saveable.Load(CharacterSheet);
         }
     }
-
-    
 
     public string GetCharacterInfo(GeneralInputType type)
     {

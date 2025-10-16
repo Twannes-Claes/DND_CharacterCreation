@@ -16,9 +16,8 @@ public class EquipmentManager : MonoBehaviour, ISaveable
     private void OnEnable()
     {
         GameManager.Instance.EditModeToggled += OnEditMode;
+        OnEditMode(GameManager.Instance.EditMode);
     }
-
-    
 
     private void OnDisable()
     {
@@ -79,6 +78,9 @@ public class EquipmentManager : MonoBehaviour, ISaveable
 
     private void OnEditMode(bool editMode)
     {
+        if (_equipments.Count == 0)
+            return;
+
         _equipments[0].gameObject.SetActive(editMode);
         _equipments[0].OnEditMode(editMode);
     }

@@ -84,18 +84,6 @@ public class EquipmentField : MonoBehaviour
     public void OnEditMode(bool editMode)
     {
         _removeButton.gameObject.SetActive(editMode);
-
-        //if (editMode)
-        //{
-        //    //RectTransform rect = (RectTransform)_nameInput.transform;
-        //
-        //    //rect.anchorMin
-        //    //rect.anchorMax
-        //}
-        //else
-        //{
-        //
-        //}
     }
     #endregion
 }
