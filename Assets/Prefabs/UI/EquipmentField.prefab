@@ -334,6 +334,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7257566813868330674, guid: 0f983dfa73fe5f8409c3a77881313026,
         type: 3}
+      propertyPath: m_OnFocusSelectAll
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7257566813868330674, guid: 0f983dfa73fe5f8409c3a77881313026,
+        type: 3}
       propertyPath: m_CharacterValidation
       value: 2
       objectReference: {fileID: 0}
@@ -584,7 +589,7 @@ PrefabInstance:
     - target: {fileID: 7257566813868330674, guid: 0f983dfa73fe5f8409c3a77881313026,
         type: 3}
       propertyPath: m_OnFocusSelectAll
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8051136355423659459, guid: 0f983dfa73fe5f8409c3a77881313026,
         type: 3}

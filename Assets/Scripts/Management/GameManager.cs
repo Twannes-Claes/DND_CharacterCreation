@@ -7,8 +7,9 @@ using System;
 public class GameManager : MonoBehaviour
 {
     #region Editor Fields
-    [SerializeField]
-    private List<AbilityScoreInputField> _abilityScores;
+    [SerializeField] private List<AbilityScoreInputField> _abilityScores;
+
+    [SerializeField] private List<CanvasGroup> _canvasGroups;
     #endregion
 
     #region Fields
@@ -76,6 +77,11 @@ public class GameManager : MonoBehaviour
         EditModeToggled?.Invoke(EditMode);
 
         SaveCharacter();
+
+        foreach (CanvasGroup group in _canvasGroups)
+        {
+            group.interactable = EditMode;
+        }
     }
 
     public void SaveCharacter()
