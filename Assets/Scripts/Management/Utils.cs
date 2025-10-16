@@ -28,4 +28,19 @@ public static class Utils
 
         return dicePart + modifier;
     }
+
+    public static int GetDiceCount(string diceText)
+    {
+        if (string.IsNullOrWhiteSpace(diceText))
+            return 0;
+
+        diceText = diceText.Replace(" ", "");
+
+        var match = Regex.Match(diceText, @"^(\d*)d\d+");
+
+        if (!match.Success)
+            return 0;
+
+        return int.TryParse(match.Groups[1].Value, out int count) && count > 0 ? count : 1;
+    }
 }

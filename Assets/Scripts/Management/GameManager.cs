@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 [DefaultExecutionOrder(-100)]
 public class GameManager : MonoBehaviour
@@ -14,13 +15,20 @@ public class GameManager : MonoBehaviour
     private readonly Dictionary<AbilityScores, AbilityScoreInputField> _abilityScoreDict = new Dictionary<AbilityScores, AbilityScoreInputField>();
 
     private List<ISaveable> _saveables = null;
-
-    public bool FreshCharacter = true;
     #endregion
 
     #region Properties
     public Character CharacterSheet { get; set; } = null;
-    #endregion 
+    public bool EditMode { get; set; } = false;
+
+    public bool FreshCharacter = true;
+    #endregion
+
+    #region Events
+
+    public Action<bool> EditModeToggled;
+
+    #endregion
 
     #region Statics
     public static GameManager Instance { get; private set; }
@@ -53,6 +61,23 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Functions
+    private void Update()
+    {
+        if (Input.GetKeyUp(KeyCode.F2))
+        {
+            ToggleEditMode();
+        }
+    }
+
+    public void ToggleEditMode()
+    {
+        EditMode = !EditMode;
+
+        EditModeToggled?.Invoke(EditMode);
+
+        SaveSheet();
+    }
+
     public void LoadSaveables()
     {
         foreach (ISaveable saveable in _saveables)

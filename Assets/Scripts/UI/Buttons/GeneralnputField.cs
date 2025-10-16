@@ -95,6 +95,16 @@ public class GeneralInputField : MonoBehaviour, ISaveable
 
     private void ApplyPostEditLogic()
     {
+        if (_inputField.characterValidation == TMP_InputField.CharacterValidation.Integer)
+        {
+            if (int.TryParse(_inputField.text, out int amount))
+            {
+                amount = Mathf.Clamp(amount, 0, int.MaxValue);
+            }
+
+            _inputField.text = amount.ToString();
+        }
+
         switch (_inputType)
         {
             case GeneralInputType.ProfiencyBonus:
@@ -125,6 +135,33 @@ public class GeneralInputField : MonoBehaviour, ISaveable
             case GeneralInputType.MaxHitDice:
             {
                 _inputField.text = Utils.UpdateDiceModifier(GameManager.Instance.GetAbilityScore(AbilityScores.Constitution).AbilityModifier, _inputField.text);
+            }
+            break;
+
+            case GeneralInputType.CurrentHitDice:
+            {
+                if (int.TryParse(_inputField.text, out int currentHitDice))
+                {
+                    int maxDiceAmount = Utils.GetDiceCount(GameManager.Instance.CharacterSheet.CharacterInfo[(int)GeneralInputType.MaxHitDice]);
+
+                    currentHitDice = Mathf.Clamp(currentHitDice, 0, maxDiceAmount);
+
+                    _inputField.text = currentHitDice.ToString();
+                }
+            }
+            break;
+
+            case GeneralInputType.CurrentHitPoints:
+            {
+                if (int.TryParse(_inputField.text, out int currentHp))
+                {
+                    if (int.TryParse(GameManager.Instance.CharacterSheet.CharacterInfo[(int)GeneralInputType.MaxHitPoints], out int maxHp) )
+                    {
+                        currentHp = Mathf.Clamp(currentHp, 0, maxHp);
+                    }
+
+                    _inputField.text = currentHp.ToString();
+                }
             }
             break;
 

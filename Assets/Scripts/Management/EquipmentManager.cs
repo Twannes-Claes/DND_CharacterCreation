@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,6 +10,20 @@ public class EquipmentManager : MonoBehaviour, ISaveable
 
     #region Fields
     private List<EquipmentField> _equipments = new List<EquipmentField>();
+    #endregion
+
+    #region LifeCycle
+    private void OnEnable()
+    {
+        GameManager.Instance.EditModeToggled += OnEditMode;
+    }
+
+    
+
+    private void OnDisable()
+    {
+        GameManager.Instance.EditModeToggled -= OnEditMode;
+    }
     #endregion
 
     #region Functions
@@ -61,6 +75,12 @@ public class EquipmentManager : MonoBehaviour, ISaveable
                 sheet.Equipments.Add(field.GetEquipment());
             }
         }
+    }
+
+    private void OnEditMode(bool editMode)
+    {
+        _equipments[0].gameObject.SetActive(editMode);
+        _equipments[0].OnEditMode(editMode);
     }
     #endregion
 }

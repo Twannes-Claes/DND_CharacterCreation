@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
@@ -20,8 +18,17 @@ public class EquipmentField : MonoBehaviour
     #endregion
 
     #region LifeCycle
-    private void OnEnable() => _removeButton.onClick.AddListener(OnClick);
-    private void OnDisable() => _removeButton.onClick.RemoveListener(OnClick);
+    private void OnEnable()
+    {
+        _removeButton.onClick.AddListener(OnClick);
+        GameManager.Instance.EditModeToggled += OnEditMode;
+    }
+
+    private void OnDisable()
+    {
+        _removeButton.onClick.RemoveListener(OnClick);
+        GameManager.Instance.EditModeToggled -= OnEditMode;
+    }
     #endregion
 
     #region Functions
@@ -30,14 +37,14 @@ public class EquipmentField : MonoBehaviour
     {
         _isFirst = isFirst;
 
-        Image imageComp = _removeButton.gameObject.GetComponent<Image>();
 
-        //Blank text if its the first one
+        Image imageComp = _removeButton.gameObject.GetComponent<Image>();
+        _removeButton.gameObject.SetActive(GameManager.Instance.EditMode);
+
         if (isFirst)
         {
             imageComp.sprite = Settings.Instance.Checkmark;
-            imageComp.color = Settings.Instance.Green;
-
+            gameObject.SetActive(GameManager.Instance.EditMode);
             return;
         }
 
@@ -45,12 +52,14 @@ public class EquipmentField : MonoBehaviour
         _amountInput.text = equipment.amount.ToString();
 
         imageComp.sprite = Settings.Instance.Cross;
-        imageComp.color = Settings.Instance.Red;
     }
 
     public Equipment GetEquipment()
     {
-        int.TryParse(_amountInput.text, out int amount);
+        if (int.TryParse(_amountInput.text, out int amount) == false)
+        {
+            amount = 1;
+        }
 
         return new Equipment(_nameInput.text, amount);
     }
@@ -70,6 +79,23 @@ public class EquipmentField : MonoBehaviour
         }
 
         Manager.RemoveField(this);
+    }
+
+    public void OnEditMode(bool editMode)
+    {
+        _removeButton.gameObject.SetActive(editMode);
+
+        //if (editMode)
+        //{
+        //    //RectTransform rect = (RectTransform)_nameInput.transform;
+        //
+        //    //rect.anchorMin
+        //    //rect.anchorMax
+        //}
+        //else
+        //{
+        //
+        //}
     }
     #endregion
 }
