@@ -6,37 +6,42 @@ public class Character
 {
     public List<string> CharacterInfo = new List<string>(16)
     {
-        "",                      //CharacterName = 0,
-        "",                      //ClassLevel,
-        "",                      //Background,
-        "",                      //PlayerName,
-        "",                      //Race,
-        "",                      //Alignment,
-        "0",                     //ExperiencePoints,
-        "+2",                    //ProfiencyBonus,
-        "11",                    //ArmorClass,
-        "25",                    //Speed,
-        "10",                    //MaxHitPoints,
-        "10",                    //CurrentHitPoints,
-        "1d8",                   //MaxHitDice,
-        "1",                     //CurrentHitDice,
-        "",                      //Personality,
-        "",                      //Ideals,
-        "",                      //Bonds,
-        "",                      //Flaws,
-        "  <b>Disciple Of life:</b>​ Your healing spells are particulary effective. Whenever you restore hit points to a creature with a spell of 1st level or higher, the creature regains additional hit points equal to 2+ the spell's level.​",                      //Feats,
-        "<b>Proficiencies:</b>", //Proficiencies,
-        "0",                     //TemporaryHitPoints
-        "0",                     //Copper,
-        "0",                     //Silver,
-        "0",                     //Electrum,
-        "0",                     //Gold,
-        "0",                     //Platinum,
-        "0",                     //Inspiration,
-        "<b>Languages:</b>"      //Languages
+        /*CharacterName*/           "",
+        /*ClassLevel*/              "",
+        /*Background*/              "",
+        /*PlayerName*/              "",
+        /*Race*/                    "",
+        /*Alignment*/               "", 
+        /*ExperiencePoints*/        "0",   
+        /*ProfiencyBonus*/          "+2",
+        /*ArmorClass*/              "11",
+        /*Speed*/                   "25",
+        /*MaxHitPoints*/            "10",
+        /*CurrentHitPoints*/        "10",
+        /*MaxHitDice*/              "1d8", 
+        /*CurrentHitDice*/          "1",         
+        /*Personality*/             "",         
+        /*Ideals*/                  "",
+        /*Bonds*/                   "",
+        /*Flaws*/                   "",
+        /*Feats*/                   "  <b>Disciple Of life:</b>​ Your healing spells are particulary effective. Whenever you restore hit points to a creature with a spell of 1st level or higher, the creature regains additional hit points equal to 2+ the spell's level.​",
+        /*Proficiencies*/           "<b>Proficiencies:</b>",
+        /*TemporaryHitPoints*/      "0",
+        /*Copper*/                  "0",
+        /*Silver*/                  "0",
+        /*Electrum*/                "0",
+        /*Gold*/                    "0",
+        /*Platinum*/                "0",
+        /*Inspiration*/             "0",
+        /*Languages*/               "<b>Languages:</b> Common",
+        /*SpellcastingClass*/       "",
+        /*SpellcastingAbility*/     "-",
+        /*SpellcastingSave*/        "DC 0",
+        /*SpellcastingAttackBonus*/ "+0",
+        /*SpellsPrepared*/          "0"
     };
 
-    public List<int> AbilityScores = new List<int> { 12, 14, 15, 8, 9, 10 };
+    public List<int> AbilityScores = new List<int> { 10, 10, 10, 10, 10, 10 };
 
     public List<Proficiency> SkillProficiencies = new List<Proficiency>
     {
@@ -51,6 +56,8 @@ public class Character
         new Equipment("Arrows", 25),
         new Equipment("Flask of oil", 2)
     };
+
+    public List<Spell> PreparedSpells = new List<Spell>();
 }
 
 [Serializable]
@@ -76,6 +83,21 @@ public struct Equipment
     {
         this.name = name;
         this.amount = amount;
+    }
+}
+
+[Serializable]
+public struct Spell
+{
+    public int index;
+    public string name;
+    public bool isSavingThrow;
+
+    public Spell(int index, string name, bool isSavingThrow)
+    {
+        this.index = index;
+        this.name = name;
+        this.isSavingThrow = isSavingThrow;
     }
 }
 

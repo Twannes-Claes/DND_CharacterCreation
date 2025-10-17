@@ -50,6 +50,18 @@ public class GameManager : MonoBehaviour
             {
                 _abilityScoreDict[field.AbilityScore] = field;
             }
+
+            foreach (CanvasGroup group in _canvasGroups)
+            {
+                group.interactable = false;
+            }
+
+            foreach (GameObject page in _pages)
+            {
+                page.SetActive(false);
+            }
+
+            _pages[0].SetActive(true);
         }
         else
         {
@@ -79,22 +91,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void MovePage(int direction)
+    {
+        _pages[_activePage].SetActive(false);
+        _activePage = (_activePage + direction + _pages.Count) % _pages.Count;
+        _pages[_activePage].SetActive(true);
+    }
+
     public void MoveLeft()
     {
-        _pages[_activePage].gameObject.SetActive(false);
-
-        _activePage = (_activePage - 1 + _pages.Count) % _pages.Count;
-
-        _pages[_activePage].gameObject.SetActive(true);
+        MovePage(-1);
     }
 
     public void MoveRight()
     {
-        _pages[_activePage].gameObject.SetActive(false);
-
-        _activePage = (_activePage + 1) % _pages.Count;
-
-        _pages[_activePage].gameObject.SetActive(true);
+        MovePage(1);
     }
 
     public void SaveCharacter()
@@ -104,7 +115,7 @@ public class GameManager : MonoBehaviour
             saveable.Save(CharacterSheet);
         }
 
-        CharacterSaver.SavePersistent(CharacterSheet);
+        Debug.Log(CharacterSaver.SavePersistent(CharacterSheet));
     }
 
     public void BackUpCharacter()

@@ -73,10 +73,17 @@ public class GeneralInputField : MonoBehaviour, ISaveable
     {
         switch (_inputType)
         {
+            case GeneralInputType.SpellcastingAttackBonus:
             case GeneralInputType.ProfiencyBonus:
             case GeneralInputType.Speed:
             {
                 _inputField.text = Regex.Replace(_inputField.text, @"\D", "");
+            }
+            break;
+
+            case GeneralInputType.SpellcastingSave:
+            {
+                _inputField.text = _inputField.text.Remove(0, 3);
             }
             break;
 
@@ -99,10 +106,9 @@ public class GeneralInputField : MonoBehaviour, ISaveable
         {
             if (int.TryParse(_inputField.text, out int amount))
             {
-                amount = Mathf.Clamp(amount, 0, int.MaxValue);
+                amount = Mathf.Max(0, amount);
+                _inputField.text = amount.ToString();
             }
-
-            _inputField.text = amount.ToString();
         }
 
         switch (_inputType)
@@ -118,9 +124,24 @@ public class GeneralInputField : MonoBehaviour, ISaveable
             }
             break;
 
+            case GeneralInputType.SpellcastingAttackBonus:
+            {
+                if (int.TryParse(_inputField.text, out int number))
+                {
+                    _inputField.text = Utils.ToSignedNumber(number);
+                }
+            }
+            break;
+
             case GeneralInputType.Speed:
             {
                 _inputField.text += " ft.";
+            }
+            break;
+
+            case GeneralInputType.SpellcastingSave:
+            {
+                _inputField.text = $"DC {_inputField.text}";
             }
             break;
 
@@ -217,6 +238,11 @@ public class GeneralInputField : MonoBehaviour, ISaveable
 
     public void Load(Character sheet)
     {
+        if (_inputField == null || _textAreaTransform == null)
+        {
+            Awake();
+        }
+
         _inputField.text = sheet.CharacterInfo[(int)_inputType];
 
         ApplyPreEditLogic();

@@ -162,7 +162,7 @@ GameObject:
   - component: {fileID: 3564176213698354828}
   - component: {fileID: 1971995048602693488}
   m_Layer: 6
-  m_Name: ProfiencyToggle
+  m_Name: Toggle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -235,7 +235,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_IsOn: 1
+  m_IsOn: 0
 --- !u!114 &1971995048602693488
 MonoBehaviour:
   m_ObjectHideFlags: 0

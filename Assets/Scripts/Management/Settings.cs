@@ -32,5 +32,8 @@ public class Settings : MonoBehaviour
     public Sprite Cross;
 
     public float DesktopStartZoom = 700;
+
+    public Sprite SpellSaveSprite;
+    public Sprite AttackBonusSprite;
     #endregion
 }

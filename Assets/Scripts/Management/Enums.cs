@@ -82,5 +82,10 @@ public enum GeneralInputType
     Gold,
     Platinum,
     Inspiration,
-    Languages
+    Languages,
+    SpellcastingClass,
+    SpellcastingAbility,
+    SpellcastingSave,
+    SpellcastingAttackBonus,
+    SpellsPrepared
 };
