@@ -22,10 +22,10 @@ public class SpellManager : MonoBehaviour, ISaveable
     {
         for (int i = 0; i < _spellFields.Count; i++)
         {
-            //i is a reference, so won't pass the correct one to the lambda
-            //make a value instead
-            int index = i;
-            _spellFields[i].SpellToggle.onValueChanged.AddListener((bool value) => OnToggleChanged(value, index));
+            ////i is a reference, so won't pass the correct one to the lambda
+            ////make a value instead
+            //int index = i;
+            _spellFields[i].SpellToggle.onValueChanged.AddListener((bool value) => OnToggleChanged(value));
         }
 
         _limitInput.onEndEdit.AddListener(OnLimitChanged);
@@ -44,7 +44,7 @@ public class SpellManager : MonoBehaviour, ISaveable
     #endregion
 
     #region Functions
-    private void OnToggleChanged(bool isOn, int index)
+    private void OnToggleChanged(bool isOn)
     {
         int modifier = isOn ? +1 : -1;
 
