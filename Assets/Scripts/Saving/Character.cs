@@ -38,7 +38,7 @@ public class Character
         /*SpellcastingAbility*/     "-",
         /*SpellcastingSave*/        "DC 0",
         /*SpellcastingAttackBonus*/ "+0",
-        /*SpellsPrepared*/          "0"
+        /*SpellsPrepared*/          "2"
     };
 
     public List<int> AbilityScores = new List<int> { 10, 10, 10, 10, 10, 10 };
@@ -57,7 +57,7 @@ public class Character
         new Equipment("Flask of oil", 2)
     };
 
-    public List<Spell> PreparedSpells = new List<Spell>();
+    public List<Spell> Spells = new List<Spell>();
 }
 
 [Serializable]
@@ -91,12 +91,17 @@ public struct Spell
 {
     public int index;
     public string name;
+    public string info;
+
+    public bool isPrepared;
     public bool isSavingThrow;
 
-    public Spell(int index, string name, bool isSavingThrow)
+    public Spell(int index, string name, string info, bool isPrepared, bool isSavingThrow)
     {
         this.index = index;
         this.name = name;
+        this.info = info;
+        this.isPrepared = isPrepared;
         this.isSavingThrow = isSavingThrow;
     }
 }

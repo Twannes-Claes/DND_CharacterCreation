@@ -7,28 +7,25 @@ using TMPro;
 public class SpellManager : MonoBehaviour, ISaveable
 {
     #region Editor Fields
-    [SerializeField] private List<Toggle> _spellToggles = new List<Toggle>();
+    [SerializeField] private List<SpellField> _spellFields = new List<SpellField>();
 
     [SerializeField] private TMP_InputField _limitInput;
     #endregion
 
     #region Fields
-    private int _prepareLimit = 0;
+    private int _limit = 0;
     private int _currentPrepared = 0;
-
-    private List<int> _activeToggleIndexes = new List<int>();
     #endregion
 
     #region LifeCycle
     private void OnEnable()
     {
-        for (int i = 0; i < _spellToggles.Count; i++)
+        for (int i = 0; i < _spellFields.Count; i++)
         {
             //i is a reference, so won't pass the correct one to the lambda
             //make a value instead
             int index = i;
-            Toggle toggle = _spellToggles[i];
-            toggle.onValueChanged.AddListener((bool value) => OnToggleChanged(value, index));
+            _spellFields[i].SpellToggle.onValueChanged.AddListener((bool value) => OnToggleChanged(value, index));
         }
 
         _limitInput.onEndEdit.AddListener(OnLimitChanged);
@@ -38,9 +35,9 @@ public class SpellManager : MonoBehaviour, ISaveable
     {
         _limitInput.onEndEdit.RemoveAllListeners();
 
-        foreach (Toggle toggle in _spellToggles)
+        foreach (SpellField spell in _spellFields)
         {
-            toggle.onValueChanged.RemoveAllListeners();
+            spell.SpellToggle.onValueChanged.RemoveAllListeners();
         }
     }
 
@@ -53,15 +50,6 @@ public class SpellManager : MonoBehaviour, ISaveable
 
         _currentPrepared = Mathf.Max(0, _currentPrepared + modifier);
 
-        if (isOn)
-        {
-            _activeToggleIndexes.Add(index);
-        }
-        else
-        {
-            _activeToggleIndexes.Remove(index);
-        }
-
         UpdateToggleInteractability();
     }
 
@@ -69,28 +57,41 @@ public class SpellManager : MonoBehaviour, ISaveable
     {
         if (int.TryParse(limit, out int val))
         {
-            _prepareLimit = Mathf.Max(0, val);
+            _limit = Mathf.Max(0, val);
+
             UpdateToggleInteractability();
         }
     }
 
     private void UpdateToggleInteractability()
     {
-        bool atLimit = _currentPrepared >= _prepareLimit;
+        bool atLimit = _currentPrepared == _limit;
 
-        foreach (Toggle toggle in _spellToggles)
+        foreach (SpellField spell in _spellFields)
         {
-            toggle.interactable = toggle.isOn || !atLimit;
+            if (spell.IsValid == false)
+                continue;
+
+            Toggle spellToggle = spell.SpellToggle;
+
+            spellToggle.interactable = spell.SpellToggle.isOn || !atLimit;
         }
     }
 
     public void Load(Character sheet)
     {
-        _currentPrepared = sheet.PreparedSpells.Count;
+        _currentPrepared = 0;
 
-        foreach(Spell p in sheet.PreparedSpells)
+        for (int i = 0; i < sheet.Spells.Count; i++)
         {
-            _spellToggles[p.index].isOn = true;
+            Spell spell = sheet.Spells[i];
+
+            _spellFields[spell.index].Initialize(spell);
+
+            if (spell.isPrepared)
+            {
+                _currentPrepared++;
+            }
         }
 
         OnLimitChanged(sheet.CharacterInfo[(int)GeneralInputType.SpellsPrepared]);
@@ -98,11 +99,19 @@ public class SpellManager : MonoBehaviour, ISaveable
 
     public void Save(Character sheet)
     {
-        sheet.PreparedSpells.Clear();
+        sheet.Spells.Clear();
 
-        foreach(int index in _activeToggleIndexes)
+        for (int i = 0; i < _spellFields.Count; i++)
         {
-            sheet.PreparedSpells.Add(new Spell(index, "", false));
+            SpellField field = _spellFields[i];
+
+            if (field.IsValid == false)
+                continue;
+
+            Spell spell = field.ToSpell();
+            spell.index = i;
+
+            sheet.Spells.Add(spell);
         }
     }
     #endregion
