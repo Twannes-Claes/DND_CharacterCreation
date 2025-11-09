@@ -1,4 +1,4 @@
-using System.IO;
+using Newtonsoft.Json;
 using UnityEngine;
 
 public static class CharacterSaver
@@ -15,7 +15,7 @@ public static class CharacterSaver
         if (PlayerPrefs.HasKey(CharacterKey))
         {
             string json = PlayerPrefs.GetString(CharacterKey);
-            Character save = JsonUtility.FromJson<Character>(json);
+            Character save = JsonConvert.DeserializeObject<Character>(json);
 
             if (save != null)
             {
@@ -28,7 +28,7 @@ public static class CharacterSaver
 
     public static string SavePersistent(Character character)
     {
-        string json = JsonUtility.ToJson(character, true);
+        string json = JsonConvert.SerializeObject(character);
         PlayerPrefs.SetString(CharacterKey, json);
         PlayerPrefs.Save();
 

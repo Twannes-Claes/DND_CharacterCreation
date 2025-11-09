@@ -58,6 +58,8 @@ public class Character
     };
 
     public List<Spell> Spells = new List<Spell>();
+
+    public Dictionary<int, SpellSlot> SpellSlots = new Dictionary<int, SpellSlot>();
 }
 
 [Serializable]
@@ -103,6 +105,19 @@ public struct Spell
         this.info = info;
         this.isPrepared = isPrepared;
         this.isSavingThrow = isSavingThrow;
+    }
+}
+
+[Serializable]
+public struct SpellSlot
+{
+    public int total;
+    public int used;
+
+    public SpellSlot(int total, int used)
+    {
+        this.total = total;
+        this.used = used;
     }
 }
 

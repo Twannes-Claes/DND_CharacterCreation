@@ -87,5 +87,6 @@ public enum GeneralInputType
     SpellcastingAbility,
     SpellcastingSave,
     SpellcastingAttackBonus,
-    SpellsPrepared
+    SpellsPrepared,
+    Notes
 };

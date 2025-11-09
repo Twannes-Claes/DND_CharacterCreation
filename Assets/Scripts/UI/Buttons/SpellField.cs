@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
 
 public class SpellField : MonoBehaviour
 {
@@ -48,6 +46,18 @@ public class SpellField : MonoBehaviour
             _spellToggle.interactable = isValid;
         });
 
+        _infoInput.onSelect.AddListener((text) =>
+        {
+            _infoInput.textComponent.alignment = TextAlignmentOptions.Bottom;
+            _infoInput.placeholder.gameObject.SetActive(false);
+        });
+
+        _infoInput.onEndEdit.AddListener((text) =>
+        {
+            _infoInput.textComponent.alignment = TextAlignmentOptions.BottomRight;
+            _infoInput.placeholder.gameObject.SetActive(true);
+        });
+
         _typeButton.onClick.AddListener(() =>
         {
             _isSavingThrow = !_isSavingThrow;
@@ -58,6 +68,9 @@ public class SpellField : MonoBehaviour
     private void OnDisable()
     {
         _nameInput.onEndEdit.RemoveAllListeners();
+        _infoInput.onEndEdit.RemoveAllListeners();
+
+        _infoInput.onSelect.RemoveAllListeners();
 
         _typeButton.onClick.RemoveAllListeners();
     }
@@ -86,6 +99,15 @@ public class SpellField : MonoBehaviour
     private void ResetTransform()
     {
         foreach (RectTransform rect in _nameInput.transform.GetChild(0))
+        {
+            if (rect.offsetMin == Vector2.zero && rect.offsetMax == Vector2.zero)
+                return;
+
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
+        }
+
+        foreach (RectTransform rect in _infoInput.transform.GetChild(0))
         {
             if (rect.offsetMin == Vector2.zero && rect.offsetMax == Vector2.zero)
                 return;

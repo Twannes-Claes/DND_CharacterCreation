@@ -35,5 +35,7 @@ public class Settings : MonoBehaviour
 
     public Sprite SpellSaveSprite;
     public Sprite AttackBonusSprite;
+
+    public int MaxSpellSlotsPerLevel = 4;
     #endregion
 }
