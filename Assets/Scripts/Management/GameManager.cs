@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using System;
+using Newtonsoft.Json;
 
 [DefaultExecutionOrder(-100)]
 public class GameManager : MonoBehaviour
@@ -110,6 +111,8 @@ public class GameManager : MonoBehaviour
 
     public void SaveCharacter()
     {
+        //CharacterSheet = new Character();
+
         foreach (ISaveable saveable in _saveables)
         {
             saveable.Save(CharacterSheet);
@@ -130,7 +133,7 @@ public class GameManager : MonoBehaviour
 
     public void LoadCharacter(string json)
     {
-        LoadCharacter(JsonUtility.FromJson<Character>(json));
+        LoadCharacter(JsonConvert.DeserializeObject<Character>(json));
     }
 
     public void LoadCharacter(Character save)

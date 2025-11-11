@@ -22,8 +22,6 @@ public class ResetTransformAfterEdit : MonoBehaviour
 
         _inputField.onEndEdit.AddListener((text) =>
         {
-            _inputField.text = text.TrimEnd();
-
             foreach (RectTransform rect in _textAreaTransform)
             {
                 if (rect.offsetMin == Vector2.zero && rect.offsetMax == Vector2.zero)

@@ -12,10 +12,13 @@ public class SpellField : MonoBehaviour
     [SerializeField] private Image _typeImage;
 
     [SerializeField] private Toggle _spellToggle;
+
+    [SerializeField] private bool _isCantrip;
     #endregion
 
     #region  Fields
     private bool _isSavingThrow = false;
+    private static ISaveable _saveData;
     #endregion
 
     #region Properties
@@ -31,8 +34,6 @@ public class SpellField : MonoBehaviour
         {
             _nameInput.text = text.TrimEnd();
 
-            ResetTransform();
-
             bool isValid = IsValid;
 
             _infoInput.gameObject.SetActive(isValid);
@@ -44,6 +45,8 @@ public class SpellField : MonoBehaviour
             }
 
             _spellToggle.interactable = isValid;
+
+            _saveData.Save(GameManager.Instance.CharacterSheet);
         });
 
         _infoInput.onSelect.AddListener((text) =>
@@ -56,12 +59,16 @@ public class SpellField : MonoBehaviour
         {
             _infoInput.textComponent.alignment = TextAlignmentOptions.BottomRight;
             _infoInput.placeholder.gameObject.SetActive(true);
+
+            _saveData.Save(GameManager.Instance.CharacterSheet);
         });
 
         _typeButton.onClick.AddListener(() =>
         {
             _isSavingThrow = !_isSavingThrow;
             _typeImage.sprite = _isSavingThrow ? Settings.Instance.SpellSaveSprite : Settings.Instance.AttackBonusSprite;
+
+            _saveData.Save(GameManager.Instance.CharacterSheet);
         });
     }
 
@@ -77,8 +84,10 @@ public class SpellField : MonoBehaviour
     #endregion
 
     #region Functions
-    public void Initialize(Spell spell)
+    public void Initialize(Spell spell, ISaveable saveData)
     {
+        _saveData = saveData;
+
         _nameInput.text = spell.name;
         _infoInput.text = spell.info;
 
@@ -91,30 +100,9 @@ public class SpellField : MonoBehaviour
         _typeButton.gameObject.SetActive(IsValid);
     }
 
-    public Spell ToSpell()
+    public Spell ToSpell(int index)
     {
-        return new Spell(-1, _nameInput.text, _infoInput.text, _spellToggle.isOn, _isSavingThrow);
-    }
-
-    private void ResetTransform()
-    {
-        foreach (RectTransform rect in _nameInput.transform.GetChild(0))
-        {
-            if (rect.offsetMin == Vector2.zero && rect.offsetMax == Vector2.zero)
-                return;
-
-            rect.offsetMin = Vector2.zero;
-            rect.offsetMax = Vector2.zero;
-        }
-
-        foreach (RectTransform rect in _infoInput.transform.GetChild(0))
-        {
-            if (rect.offsetMin == Vector2.zero && rect.offsetMax == Vector2.zero)
-                return;
-
-            rect.offsetMin = Vector2.zero;
-            rect.offsetMax = Vector2.zero;
-        }
+        return new Spell(index, _nameInput.text, _infoInput.text, _spellToggle.isOn, _isSavingThrow, _isCantrip);
     }
     #endregion
 }

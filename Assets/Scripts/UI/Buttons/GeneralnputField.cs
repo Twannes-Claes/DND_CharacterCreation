@@ -83,7 +83,7 @@ public class GeneralInputField : MonoBehaviour, ISaveable
 
             case GeneralInputType.SpellcastingSave:
             {
-                _inputField.text = _inputField.text.Remove(0, 3);
+                _inputField.text = _inputField.text.Replace("DC ", "");
             }
             break;
 

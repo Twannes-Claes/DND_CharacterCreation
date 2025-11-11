@@ -45,17 +45,6 @@ public class SpellSlotField : MonoBehaviour, ISaveable
     #endregion
 
     #region Functions
-    private void ResetTransform()
-    {
-        foreach (RectTransform rect in _totalInput.transform.GetChild(0))
-        {
-            if (rect.offsetMin == Vector2.zero && rect.offsetMax == Vector2.zero)
-                return;
-
-            rect.offsetMin = Vector2.zero;
-            rect.offsetMax = Vector2.zero;
-        }
-    }
 
     private void SpellSlotToggled(bool used)
     {
@@ -67,8 +56,6 @@ public class SpellSlotField : MonoBehaviour, ISaveable
 
     private void OnTotalChanged(string text)
     {
-        ResetTransform();
-
         if (!int.TryParse(text, out int total))
         {
             _totalInput.text = _previousTotal.ToString();
@@ -78,7 +65,10 @@ public class SpellSlotField : MonoBehaviour, ISaveable
         total = Mathf.Clamp(total, 0, Settings.Instance.MaxSpellSlotsPerLevel);
 
         if (total == _previousTotal)
+        {
+            _totalInput.text = total.ToString();
             return;
+        }
 
         _previousTotal = total;
         _spellSlot.total = total;
@@ -124,20 +114,14 @@ public class SpellSlotField : MonoBehaviour, ISaveable
 
     public void Save(Character sheet)
     {
-        sheet.SpellSlots[_level] = _spellSlot;
+        sheet.SpellSlots[_level-1] = _spellSlot;
     }
 
     public void Load(Character sheet)
     {
-        ResetTransform();
         ClearToggles();
 
-        if (!sheet.SpellSlots.TryGetValue(_level, out SpellSlot slot))
-        {
-            _totalInput.text = "0";
-            _previousTotal = 0;
-            return;
-        }
+        SpellSlot slot = sheet.SpellSlots[_level-1];
 
         _spellSlot = slot;
         _previousTotal = slot.total;

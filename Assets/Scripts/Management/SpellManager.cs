@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class SpellManager : MonoBehaviour, ISaveable
 {
@@ -13,9 +14,14 @@ public class SpellManager : MonoBehaviour, ISaveable
     #endregion
 
     #region Fields
-    private int _limit = 0;
+    private int _prepareLimit = 0;
     private int _currentPrepared = 0;
     #endregion
+
+    #region Events
+    public static Action OnDataChanged;
+    #endregion
+
 
     #region LifeCycle
     private void OnEnable()
@@ -57,7 +63,7 @@ public class SpellManager : MonoBehaviour, ISaveable
     {
         if (int.TryParse(limit, out int val))
         {
-            _limit = Mathf.Max(0, val);
+            _prepareLimit = Mathf.Max(0, val);
 
             UpdateToggleInteractability();
         }
@@ -65,7 +71,7 @@ public class SpellManager : MonoBehaviour, ISaveable
 
     private void UpdateToggleInteractability()
     {
-        bool atLimit = _currentPrepared == _limit;
+        bool atLimit = _currentPrepared == _prepareLimit;
 
         foreach (SpellField spell in _spellFields)
         {
@@ -76,6 +82,8 @@ public class SpellManager : MonoBehaviour, ISaveable
 
             spellToggle.interactable = spell.SpellToggle.isOn || !atLimit;
         }
+
+        Save(GameManager.Instance.CharacterSheet);
     }
 
     public void Load(Character sheet)
@@ -86,7 +94,7 @@ public class SpellManager : MonoBehaviour, ISaveable
         {
             Spell spell = sheet.Spells[i];
 
-            _spellFields[spell.index].Initialize(spell);
+            _spellFields[spell.index].Initialize(spell, this);
 
             if (spell.isPrepared)
             {
@@ -108,11 +116,13 @@ public class SpellManager : MonoBehaviour, ISaveable
             if (field.IsValid == false)
                 continue;
 
-            Spell spell = field.ToSpell();
-            spell.index = i;
+            Spell spell = field.ToSpell(i);
 
             sheet.Spells.Add(spell);
         }
+
+        Debug.Log("Calling invoke");
+        OnDataChanged?.Invoke();
     }
     #endregion
 }

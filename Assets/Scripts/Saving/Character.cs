@@ -50,6 +50,8 @@ public class Character
         new Proficiency(10, true)
     };
 
+    public List<Attack> Attacks = new List<Attack>();
+
     public List<Equipment> Equipments = new List<Equipment>
     {
         new Equipment("Greatsword", 1),
@@ -59,7 +61,18 @@ public class Character
 
     public List<Spell> Spells = new List<Spell>();
 
-    public Dictionary<int, SpellSlot> SpellSlots = new Dictionary<int, SpellSlot>();
+    public List<SpellSlot> SpellSlots = new List<SpellSlot>
+    {
+        new SpellSlot(0, 0),
+        new SpellSlot(0, 0),
+        new SpellSlot(0, 0),
+        new SpellSlot(0, 0),
+        new SpellSlot(0, 0),
+        new SpellSlot(0, 0),
+        new SpellSlot(0, 0),
+        new SpellSlot(0, 0),
+        new SpellSlot(0, 0)
+    };
 }
 
 [Serializable]
@@ -72,6 +85,24 @@ public struct Proficiency
     {
         this.skill = skill;
         this.expertised = expertised;
+    }
+}
+
+[Serializable]
+public struct Attack
+{
+    public string name;
+    public string bonus;
+    public string damage;
+
+    public bool isSpell;
+
+    public Attack(string name, string bonus, string damage, bool isSpell)
+    {
+        this.name = name;
+        this.bonus = bonus;
+        this.damage = damage;
+        this.isSpell = isSpell;
     }
 }
 
@@ -97,14 +128,16 @@ public struct Spell
 
     public bool isPrepared;
     public bool isSavingThrow;
+    public bool isCantrip;
 
-    public Spell(int index, string name, string info, bool isPrepared, bool isSavingThrow)
+    public Spell(int index, string name, string info, bool isPrepared, bool isSavingThrow, bool isCantrip)
     {
         this.index = index;
         this.name = name;
         this.info = info;
         this.isPrepared = isPrepared;
         this.isSavingThrow = isSavingThrow;
+        this.isCantrip = isCantrip;
     }
 }
 
@@ -120,5 +153,3 @@ public struct SpellSlot
         this.used = used;
     }
 }
-
-
