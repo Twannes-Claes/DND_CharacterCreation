@@ -13,6 +13,12 @@ public class WebGLFileUploader : MonoBehaviour
 
     public void UploadJson()
     {
+        if (Input.GetKey(KeyCode.LeftControl))
+        {
+            GameManager.Instance.LoadCharacter(CharacterSaver.GetDefaultCharacter());
+            return;
+        }
+
         #if UNITY_WEBGL && !UNITY_EDITOR
         UploadFileJS(gameObject.name, "OnFileUploaded");
         #else
