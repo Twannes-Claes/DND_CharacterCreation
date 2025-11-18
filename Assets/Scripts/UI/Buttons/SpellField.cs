@@ -18,7 +18,7 @@ public class SpellField : MonoBehaviour
 
     #region  Fields
     private bool _isSavingThrow = false;
-    private static ISaveable _saveData;
+    public static ISaveable FieldSaveable;
     #endregion
 
     #region Properties
@@ -46,7 +46,7 @@ public class SpellField : MonoBehaviour
 
             _spellToggle.interactable = isValid;
 
-            _saveData.Save(GameManager.Instance.CharacterSheet);
+            FieldSaveable.Save(GameManager.Instance.CharacterSheet);
         });
 
         _infoInput.onSelect.AddListener((text) =>
@@ -60,7 +60,7 @@ public class SpellField : MonoBehaviour
             _infoInput.textComponent.alignment = TextAlignmentOptions.BottomRight;
             _infoInput.placeholder.gameObject.SetActive(true);
 
-            _saveData.Save(GameManager.Instance.CharacterSheet);
+            FieldSaveable.Save(GameManager.Instance.CharacterSheet);
         });
 
         _typeButton.onClick.AddListener(() =>
@@ -68,7 +68,7 @@ public class SpellField : MonoBehaviour
             _isSavingThrow = !_isSavingThrow;
             _typeImage.sprite = _isSavingThrow ? Settings.Instance.SpellSaveSprite : Settings.Instance.AttackBonusSprite;
 
-            _saveData.Save(GameManager.Instance.CharacterSheet);
+            FieldSaveable.Save(GameManager.Instance.CharacterSheet);
         });
     }
 
@@ -84,10 +84,8 @@ public class SpellField : MonoBehaviour
     #endregion
 
     #region Functions
-    public void Initialize(Spell spell, ISaveable saveData)
+    public void Initialize(Spell spell)
     {
-        _saveData = saveData;
-
         _nameInput.text = spell.name;
         _infoInput.text = spell.info;
 
@@ -98,6 +96,20 @@ public class SpellField : MonoBehaviour
 
         _infoInput.gameObject.SetActive(IsValid);
         _typeButton.gameObject.SetActive(IsValid);
+    }
+
+    public void Reset()
+    {
+        _nameInput.text = string.Empty;
+        _infoInput.text = string.Empty;
+
+        _spellToggle.isOn = false;
+
+        _isSavingThrow = false;
+        _typeImage.sprite = Settings.Instance.AttackBonusSprite;
+
+        _infoInput.gameObject.SetActive(false);
+        _typeButton.gameObject.SetActive(false);
     }
 
     public Spell ToSpell(int index)

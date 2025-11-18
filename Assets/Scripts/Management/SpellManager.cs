@@ -90,11 +90,18 @@ public class SpellManager : MonoBehaviour, ISaveable
     {
         _currentPrepared = 0;
 
+        SpellField.FieldSaveable = this;
+
+        foreach(SpellField field in _spellFields)
+        {
+            field.Reset();
+        }
+
         for (int i = 0; i < sheet.Spells.Count; i++)
         {
             Spell spell = sheet.Spells[i];
 
-            _spellFields[spell.index].Initialize(spell, this);
+            _spellFields[spell.index].Initialize(spell);
 
             if (spell.isPrepared)
             {
