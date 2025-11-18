@@ -1,5 +1,10 @@
 using System.Runtime.InteropServices;
 using UnityEngine;
+using System.IO;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class WebGLFileUploader : MonoBehaviour
 {
@@ -11,7 +16,29 @@ public class WebGLFileUploader : MonoBehaviour
         #if UNITY_WEBGL && !UNITY_EDITOR
         UploadFileJS(gameObject.name, "OnFileUploaded");
         #else
-        Debug.LogWarning("Upload not supported in Editor");
+        UploadJsonFromDisk();
+        #endif
+    }
+
+    private void UploadJsonFromDisk()
+    {
+        #if UNITY_EDITOR
+        string path = EditorUtility.OpenFilePanel
+        (
+            "Select JSON File",
+            Application.dataPath,
+            "json"
+        );
+
+        if (!string.IsNullOrEmpty(path))
+        {
+            string json = File.ReadAllText(path);
+            OnFileUploaded(json);
+        }
+        else
+        {
+            Debug.Log("Upload cancelled");
+        }
         #endif
     }
 

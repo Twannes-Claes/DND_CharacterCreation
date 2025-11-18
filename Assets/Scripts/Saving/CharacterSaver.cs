@@ -8,10 +8,7 @@ public static class CharacterSaver
     {
         if (GameManager.Instance.FreshCharacter)
         {
-            Character freshCharacter = new Character();
-            freshCharacter.AsDefault();
-
-            return freshCharacter;
+            return GetDefaultCharacter();
         }
 
         if (PlayerPrefs.HasKey(CharacterKey))
@@ -26,10 +23,7 @@ public static class CharacterSaver
             }
         }
 
-        Character character = new Character();
-        character.AsDefault();
-
-        return character;
+        return GetDefaultCharacter();
     }
 
     public static string SavePersistent(Character character)
@@ -39,6 +33,14 @@ public static class CharacterSaver
         PlayerPrefs.Save();
 
         return json;
+    }
+
+    public static Character GetDefaultCharacter()
+    {
+        Character freshCharacter = new Character();
+        freshCharacter.AsDefault();
+
+        return freshCharacter;
     }
 
     #region IO
