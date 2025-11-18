@@ -8,7 +8,7 @@ public class AttacksManager : MonoBehaviour, ISaveable
     #endregion
 
     #region Fields
-    private List<AttackField> _attacks = new List<AttackField>();
+    private readonly List<AttackField> _attacks = new List<AttackField>();
     #endregion
 
     #region Statics

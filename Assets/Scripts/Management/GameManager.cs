@@ -111,14 +111,12 @@ public class GameManager : MonoBehaviour
 
     public void SaveCharacter()
     {
-        //CharacterSheet = new Character();
-
         foreach (ISaveable saveable in _saveables)
         {
             saveable.Save(CharacterSheet);
         }
 
-        Debug.Log(CharacterSaver.SavePersistent(CharacterSheet));
+        Debug.Log($"Saving JSON:\n {CharacterSaver.SavePersistent(CharacterSheet)}");
     }
 
     public void BackUpCharacter()
