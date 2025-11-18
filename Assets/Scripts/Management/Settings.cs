@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[DefaultExecutionOrder(-100)]
+[DefaultExecutionOrder(-150)]
 public class Settings : MonoBehaviour
 {
     #region Statics

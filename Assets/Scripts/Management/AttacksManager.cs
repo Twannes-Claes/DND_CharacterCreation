@@ -31,14 +31,16 @@ public class AttacksManager : MonoBehaviour, ISaveable
     private void OnEnable()
     {
         GameManager.Instance.EditModeToggled += OnEditMode;
-        SpellManager.OnDataChanged -= Load;
-        SpellManager.OnDataChanged += Load;
         OnEditMode(GameManager.Instance.EditMode);
+
+        SpellManager.OnDataChanged += Load;
+        Load();
     }
 
     private void OnDisable()
     {
         GameManager.Instance.EditModeToggled -= OnEditMode;
+        SpellManager.OnDataChanged -= Load;
     }
     #endregion
 
@@ -70,6 +72,9 @@ public class AttacksManager : MonoBehaviour, ISaveable
 
     public void Load(Character sheet)
     {
+        if (sheet == null)
+            return;
+
         AttackField.Manager = this;
 
         foreach (Transform child in transform)
