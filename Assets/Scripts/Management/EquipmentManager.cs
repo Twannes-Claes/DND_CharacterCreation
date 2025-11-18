@@ -8,7 +8,7 @@ public class EquipmentManager : MonoBehaviour, ISaveable
     #endregion
 
     #region Fields
-    private List<EquipmentField> _equipments = new List<EquipmentField>();
+    private readonly List<EquipmentField> _equipments = new List<EquipmentField>();
     #endregion
 
     #region LifeCycle
