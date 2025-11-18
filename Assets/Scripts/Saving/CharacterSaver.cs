@@ -8,7 +8,10 @@ public static class CharacterSaver
     {
         if (GameManager.Instance.FreshCharacter)
         {
-            return new Character();
+            Character freshCharacter = new Character();
+            freshCharacter.AsDefault();
+
+            return freshCharacter;
         }
 
         if (PlayerPrefs.HasKey(CharacterKey))
@@ -23,7 +26,10 @@ public static class CharacterSaver
             }
         }
 
-        return new Character();
+        Character character = new Character();
+        character.AsDefault();
+
+        return character;
     }
 
     public static string SavePersistent(Character character)

@@ -4,8 +4,10 @@ using System.Collections.Generic;
 [Serializable]
 public class Character
 {
-    public List<string> CharacterInfo = new List<string>(16)
+    public void AsDefault()
     {
+        CharacterInfo = new List<string>(16)
+        {
         /*CharacterName*/           "",
         /*ClassLevel*/              "",
         /*Background*/              "",
@@ -14,7 +16,7 @@ public class Character
         /*Alignment*/               "", 
         /*ExperiencePoints*/        "0",   
         /*ProfiencyBonus*/          "+2",
-        /*ArmorClass*/              "11",
+        /*ArmorClass*/              "10",
         /*Speed*/                   "25",
         /*MaxHitPoints*/            "10",
         /*CurrentHitPoints*/        "10",
@@ -24,7 +26,7 @@ public class Character
         /*Ideals*/                  "",
         /*Bonds*/                   "",
         /*Flaws*/                   "",
-        /*Feats*/                   "  <b>Disciple Of life:</b>​ Your healing spells are particulary effective. Whenever you restore hit points to a creature with a spell of 1st level or higher, the creature regains additional hit points equal to 2+ the spell's level.​",
+        /*Feats*/                   "",
         /*Proficiencies*/           "<b>Proficiencies:</b>",
         /*TemporaryHitPoints*/      "0",
         /*Copper*/                  "0",
@@ -38,41 +40,40 @@ public class Character
         /*SpellcastingAbility*/     "-",
         /*SpellcastingSave*/        "DC 0",
         /*SpellcastingAttackBonus*/ "+0",
-        /*SpellsPrepared*/          "2"
-    };
+        /*SpellsPrepared*/          "0"
+        };
 
-    public List<int> AbilityScores = new List<int> { 10, 10, 10, 10, 10, 10 };
+        AbilityScores = new List<int> { 10, 10, 10, 10, 10, 10 };
 
-    public List<Proficiency> SkillProficiencies = new List<Proficiency>
-    {
-        new Proficiency(1, false),
-        new Proficiency(4, false),
-        new Proficiency(10, true)
-    };
+        SkillProficiencies = new List<Proficiency>();
 
-    public List<Attack> Attacks = new List<Attack>();
+        Attacks = new List<Attack>();
 
-    public List<Equipment> Equipments = new List<Equipment>
-    {
-        new Equipment("Greatsword", 1),
-        new Equipment("Arrows", 25),
-        new Equipment("Flask of oil", 2)
-    };
+        Equipments = new List<Equipment>();
 
-    public List<Spell> Spells = new List<Spell>();
+        Spells = new List<Spell>();
 
-    public List<SpellSlot> SpellSlots = new List<SpellSlot>
-    {
-        new SpellSlot(0, 0),
-        new SpellSlot(0, 0),
-        new SpellSlot(0, 0),
-        new SpellSlot(0, 0),
-        new SpellSlot(0, 0),
-        new SpellSlot(0, 0),
-        new SpellSlot(0, 0),
-        new SpellSlot(0, 0),
-        new SpellSlot(0, 0)
-    };
+        SpellSlots = new List<SpellSlot>
+        {
+            new SpellSlot(0, 0),
+            new SpellSlot(0, 0),
+            new SpellSlot(0, 0),
+            new SpellSlot(0, 0),
+            new SpellSlot(0, 0),
+            new SpellSlot(0, 0),
+            new SpellSlot(0, 0),
+            new SpellSlot(0, 0),
+            new SpellSlot(0, 0)
+        };
+    }
+
+    public List<string> CharacterInfo;
+    public List<int> AbilityScores;
+    public List<Proficiency> SkillProficiencies;
+    public List<Attack> Attacks;
+    public List<Equipment> Equipments;
+    public List<Spell> Spells;
+    public List<SpellSlot> SpellSlots;
 }
 
 [Serializable]

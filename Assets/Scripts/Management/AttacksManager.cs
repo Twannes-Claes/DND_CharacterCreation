@@ -70,8 +70,6 @@ public class AttacksManager : MonoBehaviour, ISaveable
 
     public void Load(Character sheet)
     {
-        Debug.Log("Attacks load");
-
         AttackField.Manager = this;
 
         foreach (Transform child in transform)
@@ -103,7 +101,6 @@ public class AttacksManager : MonoBehaviour, ISaveable
 
     public void Load()
     {
-        Debug.Log("YES LOADING CHANGE");
         Load(GameManager.Instance.CharacterSheet);
     }
 

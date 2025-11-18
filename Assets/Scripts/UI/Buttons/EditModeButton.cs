@@ -1,21 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 [RequireComponent(typeof(Button))]
 public class EditModeButton : MonoBehaviour
 {
     #region Editor Fields
-    [SerializeField] TextMeshProUGUI _text;
+    [SerializeField] private Image _colorImage;
     #endregion
 
     #region Fields
     private Button _button = null;
 
-    private const string TAG_ON = "Edit-ON";
-    private const string TAG_OFF= "Edit-OFF";
     #endregion
 
     #region LifeCycle
@@ -25,7 +20,7 @@ public class EditModeButton : MonoBehaviour
 
         _button.onClick.AddListener(OnClick);
 
-        _text.text = GameManager.Instance.EditMode ? TAG_ON : TAG_OFF;
+        _colorImage.color = GameManager.Instance.EditMode ? Settings.Instance.Green : Settings.Instance.Red;
     }
 
     private void OnDisable()
@@ -39,7 +34,7 @@ public class EditModeButton : MonoBehaviour
     {
         GameManager.Instance.ToggleEditMode();
 
-        _text.text = GameManager.Instance.EditMode ? TAG_ON : TAG_OFF;
+        _colorImage.color = GameManager.Instance.EditMode ? Settings.Instance.Green : Settings.Instance.Red;
     }
     #endregion
 }

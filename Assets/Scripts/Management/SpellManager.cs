@@ -121,7 +121,6 @@ public class SpellManager : MonoBehaviour, ISaveable
             sheet.Spells.Add(spell);
         }
 
-        Debug.Log("Calling invoke");
         OnDataChanged?.Invoke();
     }
     #endregion
