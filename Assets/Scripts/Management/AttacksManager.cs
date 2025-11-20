@@ -51,6 +51,11 @@ public class AttacksManager : MonoBehaviour, ISaveable
         {
             _attacks.Add(attackField);
             attackField.Initialize(attack, asFirst);
+
+            if (!asFirst)
+            {
+                Save(GameManager.Instance.CharacterSheet);
+            }
         }
     }
 
@@ -68,6 +73,8 @@ public class AttacksManager : MonoBehaviour, ISaveable
         _attacks.Remove(field);
 
         Destroy(field.gameObject);
+
+        Save(GameManager.Instance.CharacterSheet);
     }
 
     public void Load(Character sheet)

@@ -41,7 +41,15 @@ public class AttackField : MonoBehaviour
         _attack = attack;
 
         Image imageComp = _removeButton.gameObject.GetComponent<Image>();
-        _removeButton.gameObject.SetActive(GameManager.Instance.EditMode);
+
+        if (attack.isSpell)
+        {
+            _removeButton.gameObject.SetActive(false);
+        }
+        else
+        {
+            _removeButton.gameObject.SetActive(GameManager.Instance.EditMode);
+        }
 
         if (isFirst)
         {
