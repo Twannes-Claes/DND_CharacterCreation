@@ -22,6 +22,8 @@ public class GeneralInputField : MonoBehaviour, ISaveable
     {
         _inputField = GetComponent<TMP_InputField>();
         _textAreaTransform = (RectTransform)_inputField.textComponent.rectTransform.parent;
+
+        GameManager.Instance.AddGeneralSaveable(_inputType, this);
     }
 
     private void OnEnable()
@@ -156,7 +158,19 @@ public class GeneralInputField : MonoBehaviour, ISaveable
             case GeneralInputType.MaxHitDice:
             {
                 _inputField.text = Utils.UpdateDiceModifier(GameManager.Instance.GetAbilityScore(AbilityScores.Constitution).AbilityModifier, _inputField.text);
-            }
+
+                if (int.TryParse(GameManager.Instance.CharacterSheet.CharacterInfo[(int)GeneralInputType.CurrentHitDice], out int currentHitDice))
+                {
+                    int maxDiceAmount = Utils.GetDiceCount(_inputField.text);
+                    currentHitDice = Mathf.Clamp(currentHitDice, 0, maxDiceAmount);
+
+                    if (GameManager.Instance.GetGeneralSaveable(GeneralInputType.CurrentHitDice, out ISaveable saveable))
+                    {
+                        GameManager.Instance.CharacterSheet.CharacterInfo[(int)GeneralInputType.CurrentHitDice] = currentHitDice.ToString();
+                        saveable.Load(GameManager.Instance.CharacterSheet);
+                    }
+                }
+            }    
             break;
 
             case GeneralInputType.CurrentHitDice:

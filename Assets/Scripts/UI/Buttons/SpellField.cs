@@ -36,15 +36,16 @@ public class SpellField : MonoBehaviour
 
             bool isValid = IsValid;
 
-            _infoInput.gameObject.SetActive(isValid);
-            _typeButton.gameObject.SetActive(isValid);
-
-            if (isValid == false)
+            if (!isValid)
             {
-                _spellToggle.isOn = false;
+                Reset();
+                return;
             }
 
-            _spellToggle.interactable = isValid;
+            _infoInput.gameObject.SetActive(true);
+            _typeButton.gameObject.SetActive(true);
+
+            _spellToggle.interactable = true;
 
             FieldSaveable.Save(GameManager.Instance.CharacterSheet);
         });
@@ -104,6 +105,7 @@ public class SpellField : MonoBehaviour
         _infoInput.text = string.Empty;
 
         _spellToggle.isOn = false;
+        _spellToggle.interactable = false;
 
         _isSavingThrow = false;
         _typeImage.sprite = Settings.Instance.AttackBonusSprite;

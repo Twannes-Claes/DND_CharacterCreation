@@ -1,5 +1,8 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using TMPro;
 
 public class UIPanZoomController : MonoBehaviour
 {
@@ -21,6 +24,10 @@ public class UIPanZoomController : MonoBehaviour
     [SerializeField] private float panSpeed = 5f;
     [SerializeField] private float panSmoothTime = 0.1f;
     [SerializeField] private bool panOnlyWhenZoomed = true;
+
+    [Header("Cursor Setings")]
+    [SerializeField] private Texture2D editCursor;
+    [SerializeField] private Texture2D defaultCursor;
     #endregion
 
     #region Fields
@@ -30,6 +37,9 @@ public class UIPanZoomController : MonoBehaviour
 
     private Vector3 targetPan;
     private Vector3 panVelocity;
+
+    private Vector2 cursorOffsetEdit;
+    private Vector2 cursorOffsetNormal;
     #endregion
 
     #region Statics
@@ -45,6 +55,9 @@ public class UIPanZoomController : MonoBehaviour
         targetZoom = zoomCamera.orthographicSize;
         targetPan = zoomCamera.transform.position;
 
+        cursorOffsetEdit = new Vector2(editCursor.width/2, 0);
+        cursorOffsetNormal = new Vector2(defaultCursor.width/2, 0);
+
         if (!Application.isMobilePlatform)
         {
             targetZoom = Settings.Instance.DesktopStartZoom;
@@ -55,6 +68,8 @@ public class UIPanZoomController : MonoBehaviour
     #region GameLoop
     private void Update()
     {
+        UpdateCursor();
+
         if (EventSystem.current != null && EventSystem.current.currentSelectedGameObject != null)
             return;
 
@@ -63,6 +78,28 @@ public class UIPanZoomController : MonoBehaviour
 
         SmoothZoom();
         SmoothPan();
+    }
+
+    private void UpdateCursor()
+    {
+        PointerEventData pointer = new PointerEventData(EventSystem.current)
+        {
+            position = Input.mousePosition
+        };
+
+        List<RaycastResult> rayCasts = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointer, rayCasts);
+
+        foreach (RaycastResult ray in rayCasts)
+        {
+            if (ray.gameObject.TryGetComponent(out TMP_InputField inputfield) && inputfield.interactable || ray.gameObject.transform.parent.TryGetComponent(out Toggle toggle) && toggle.interactable || ray.gameObject.TryGetComponent(out Button button) && button.interactable)
+            {
+                Cursor.SetCursor(editCursor, cursorOffsetEdit, CursorMode.Auto);
+                return;
+            }
+        }
+
+        Cursor.SetCursor(defaultCursor, cursorOffsetNormal, CursorMode.Auto);
     }
     #endregion
 

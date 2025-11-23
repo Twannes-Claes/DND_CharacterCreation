@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     #region Fields
     private readonly Dictionary<AbilityScores, AbilityScoreInputField> _abilityScoreDict = new Dictionary<AbilityScores, AbilityScoreInputField>();
 
+    private readonly Dictionary<GeneralInputType, ISaveable> _gerenalInputSaveables = new Dictionary<GeneralInputType, ISaveable>();
     private List<ISaveable> _saveables = null;
 
     private int _activePage = 0;
@@ -164,6 +165,24 @@ public class GameManager : MonoBehaviour
     {
         _abilityScoreDict.TryGetValue(abilityScore, out var field);
         return field;
+    }
+
+    public void AddGeneralSaveable(GeneralInputType type, ISaveable saveable)
+    {
+        _gerenalInputSaveables.TryAdd(type, saveable);
+    }
+
+    public bool GetGeneralSaveable(GeneralInputType type, out ISaveable saveable)
+    {
+        saveable = null;
+
+        if (_gerenalInputSaveables.TryGetValue(type, out var value))
+        {
+            saveable = value;
+            return true;
+        }
+
+        return false;
     }
     #endregion  
 }
