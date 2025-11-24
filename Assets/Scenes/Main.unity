@@ -40535,8 +40535,8 @@ MonoBehaviour:
   panSpeed: 7.5
   panSmoothTime: 0.1
   panOnlyWhenZoomed: 1
-  editCursor: {fileID: 2800000, guid: f95301b355fc76b40988db395ecb5ce8, type: 3}
-  defaultCursor: {fileID: 2800000, guid: 3b3aecf9921ed7941b862c1afccd59f2, type: 3}
+  editCursor: {fileID: 2800000, guid: 28d57ae3b6469ff47814164161000413, type: 3}
+  defaultCursor: {fileID: 2800000, guid: e10ed7fbd9e90ee448408fbbeedf1898, type: 3}
 --- !u!114 &1477985165 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3564176213698354828, guid: d0d227f88e5314648b692057c8fa0d65,

@@ -68,7 +68,7 @@ public class UIPanZoomController : MonoBehaviour
     #region GameLoop
     private void Update()
     {
-        UpdateCursor();
+        //UpdateCursor();
 
         if (EventSystem.current != null && EventSystem.current.currentSelectedGameObject != null)
             return;

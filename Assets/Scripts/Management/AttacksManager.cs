@@ -33,14 +33,14 @@ public class AttacksManager : MonoBehaviour, ISaveable
         GameManager.Instance.EditModeToggled += OnEditMode;
         OnEditMode(GameManager.Instance.EditMode);
 
-        SpellManager.OnDataChanged += Load;
-        Load();
+        SpellManager.OnDataChanged += LoadSpells;
+        LoadSpells();
     }
 
     private void OnDisable()
     {
         GameManager.Instance.EditModeToggled -= OnEditMode;
-        SpellManager.OnDataChanged -= Load;
+        SpellManager.OnDataChanged -= LoadSpells;
     }
     #endregion
 
@@ -111,6 +111,32 @@ public class AttacksManager : MonoBehaviour, ISaveable
         }
     }
 
+    public void LoadSpells()
+    {
+        var sheet = GameManager.Instance.CharacterSheet;
+
+        if (sheet == null)
+            return;
+
+        for (int i = _attacks.Count -1; i >= 0; i--)
+        {
+            AttackField field = _attacks[i];
+            if (field.GetAttack().isSpell)
+            {
+                _attacks.RemoveAt(i);
+                Destroy(field.gameObject);
+            }
+        }
+
+        for (int i = 0; i < sheet.Spells.Count; i++)
+        {
+            if (sheet.Spells[i].isCantrip || sheet.Spells[i].isPrepared)
+            {
+                AddField(sheet.Spells[i]);
+            }
+        }
+    }
+
     public void Load()
     {
         Load(GameManager.Instance.CharacterSheet);
@@ -120,14 +146,17 @@ public class AttacksManager : MonoBehaviour, ISaveable
     {
         sheet.Attacks.Clear();
         
-        for (int i = 1; i < _attacks.Count; i++)
+        for (int i = 0; i < _attacks.Count; i++)
         {
+            if (i == 0)
+                continue;
+
             AttackField field = _attacks[i];
             Attack attack = field.GetAttack();
 
             if (!string.IsNullOrWhiteSpace(field.name) || !attack.isSpell)
             {
-                sheet.Attacks.Add(field.GetAttack());
+                sheet.Attacks.Add(attack);
             }
         }
     }
